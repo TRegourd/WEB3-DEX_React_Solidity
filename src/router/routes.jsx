@@ -4,7 +4,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 // importing all the themes
 import Home from "../pages/home";
 import ProjectOne from "../pages/project-one";
-import ProjectTwo from "../pages/project-two";
+import CrytpoCats from "../pages/CryptoCats";
 import ProjectThree from "../pages/project-three";
 import ProjectFour from "../pages/project-four";
 import ProjectSingle from "../pages/project-single";
@@ -31,7 +31,7 @@ function Router() {
         <Routes>
           <Route exact path="/" element={<Home />} />
           <Route exact path="/project-one" element={<ProjectOne />} />
-          <Route exact path="/project-two" element={<ProjectTwo />} />
+          <Route exact path="/CryptoCats" element={<CrytpoCats />} />
           <Route exact path="/project-three" element={<ProjectThree />} />
           <Route exact path="/project-four" element={<ProjectFour />} />
           <Route exact path="/project-single" element={<ProjectSingle />} />

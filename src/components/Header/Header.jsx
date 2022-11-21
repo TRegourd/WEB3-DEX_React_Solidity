@@ -37,150 +37,42 @@ function Header() {
             </li>
             <li className="nav-item dropdown">
               <a href="#" className="nav-link">
-                Projects <i className="icon-arrow-down" />
+                Buy NFT <i className="icon-arrow-down" />
               </a>
               <ul className="dropdown-menu">
                 <li className="nav-item">
-                  <a href="/project-one" className="nav-link">
-                    Project Style 1
-                  </a>
-                </li>
-                <li className="nav-item">
-                  <a href="/project-two" className="nav-link">
-                    Project Style 2
+                  <a href="/CryptoCats" className="nav-link">
+                    Crypto Cats
                   </a>
                 </li>
                 <li className="nav-item">
                   <a href="/project-three" className="nav-link">
-                    Project Style 3
+                    Other Collection
                   </a>
-                </li>
-                <li className="nav-item">
-                  <a href="/project-four" className="nav-link">
-                    Project Style 4
-                  </a>
-                </li>
-                <li className="nav-item">
-                  <a href="/project-single" className="nav-link">
-                    Project Single
-                  </a>
-                </li>
-              </ul>
-            </li>
-            <li className="nav-item dropdown">
-              <a href="#" className="nav-link">
-                Staking <i className="icon-arrow-down" />
-              </a>
-              <ul className="dropdown-menu">
-                <li className="nav-item">
-                  <a href="/staking-one" className="nav-link">
-                    Staking Style 1
-                  </a>
-                </li>
-                <li className="nav-item">
-                  <a href="/staking-two" className="nav-link">
-                    Staking Style 2
-                  </a>
-                </li>
-              </ul>
-            </li>
-            <li className="nav-item dropdown">
-              <a href="#" className="nav-link">
-                Pages <i className="icon-arrow-down" />
-              </a>
-              <ul className="dropdown-menu">
-                <li className="nav-item">
-                  <a href="/farming" className="nav-link">
-                    Farming
-                  </a>
-                </li>
-                <li className="nav-item">
-                  <a href="/leaderboard" className="nav-link">
-                    Leaderboard
-                  </a>
-                </li>
-                <li className="nav-item dropdown">
-                  <a href="#" className="nav-link">
-                    Inner Pages <i className="icon-arrow-right" />
-                  </a>
-                  <ul className="dropdown-menu">
-                    <li className="nav-item">
-                      <a href="/apply" className="nav-link">
-                        Apply for Project
-                      </a>
-                    </li>
-                    <li className="nav-item">
-                      <a href="/wallet-connect" className="nav-link">
-                        Wallet Connect
-                      </a>
-                    </li>
-                    <li className="nav-item">
-                      <a href="/help-center" className="nav-link">
-                        Help Center
-                      </a>
-                    </li>
-                    <li className="nav-item">
-                      <a href="/contact" className="nav-link">
-                        Contact
-                      </a>
-                    </li>
-                  </ul>
-                </li>
-                <li className="nav-item dropdown">
-                  <a href="#" className="nav-link">
-                    Auth Pages <i className="icon-arrow-right" />
-                  </a>
-                  <ul className="dropdown-menu">
-                    <li className="nav-item">
-                      <a href="/login" className="nav-link">
-                        Login
-                      </a>
-                    </li>
-                    <li className="nav-item">
-                      <a href="/register" className="nav-link">
-                        Register
-                      </a>
-                    </li>
-                    <li className="nav-item">
-                      <a href="/reset" className="nav-link">
-                        Forgot Password
-                      </a>
-                    </li>
-                  </ul>
-                </li>
-                <li className="nav-item">
-                  <a href="/tokenomics" className="nav-link">
-                    Tokenomics
-                  </a>
-                </li>
-                <li className="nav-item">
-                  <a href="/tier-system" className="nav-link">
-                    Tier System
-                  </a>
-                </li>
-                <li className="nav-item dropdown">
-                  <a href="#" className="nav-link">
-                    Community <i className="icon-arrow-right" />
-                  </a>
-                  <ul className="dropdown-menu">
-                    <li className="nav-item">
-                      <a href="/blog" className="nav-link">
-                        Blog
-                      </a>
-                    </li>
-                    <li className="nav-item">
-                      <a href="/blog-single" className="nav-link">
-                        Blog Single
-                      </a>
-                    </li>
-                  </ul>
                 </li>
               </ul>
             </li>
             <li className="nav-item">
-              <a href="/contact" className="nav-link">
-                Contact
+              <a href="/" className="nav-link">
+                Swap
               </a>
+            </li>
+            <li className="nav-item dropdown">
+              <a href="#" className="nav-link">
+                Earn <i className="icon-arrow-down" />
+              </a>
+              <ul className="dropdown-menu">
+                <li className="nav-item">
+                  <a href="/project-one" className="nav-link">
+                    Staking
+                  </a>
+                </li>
+                <li className="nav-item">
+                  <a href="/project-two" className="nav-link">
+                    NFT Farming
+                  </a>
+                </li>
+              </ul>
             </li>
           </ul>
           {/* Navbar Icons */}
