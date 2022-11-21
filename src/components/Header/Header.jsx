@@ -1,6 +1,19 @@
-import React from "react";
+import React, { useContext, useState } from "react";
+import { ethers } from "ethers";
+import { useEffect } from "react";
+import { AuthContext } from "../../AuthProvider";
 
 function Header() {
+  const { currentAccount, setCurrentAccount } = useContext(AuthContext);
+
+  async function connectToMetamask() {
+    const provider = new ethers.providers.Web3Provider(window.ethereum, "any");
+    // Prompt user for account connections
+    await provider.send("eth_requestAccounts", []);
+    const signer = provider.getSigner();
+    setCurrentAccount(await signer.getAddress());
+  }
+
   return (
     <header id="header">
       {/* Navbar */}
@@ -197,17 +210,26 @@ function Header() {
             </li>
           </ul>
           {/* Navbar Action Button */}
-          <ul className="navbar-nav action">
-            <li className="nav-item ml-2">
-              <a
-                href="/wallet-connect"
-                className="btn ml-lg-auto btn-bordered-white"
-              >
-                <i className="icon-wallet mr-md-2" />
-                Wallet Connect
-              </a>
-            </li>
-          </ul>
+          {!currentAccount && (
+            <ul className="navbar-nav action" onClick={connectToMetamask}>
+              <li className="nav-item ml-2">
+                <div className="btn ml-lg-auto btn-bordered-white">
+                  <i className="icon-wallet mr-md-2" />
+                  Wallet Connect
+                </div>
+              </li>
+            </ul>
+          )}
+          {currentAccount && (
+            <ul className="navbar-nav action" onClick={connectToMetamask}>
+              <li className="nav-item ml-2">
+                <div className="btn ml-lg-auto btn-bordered-white">
+                  <i className="icon-wallet mr-md-2" />
+                  {currentAccount.slice(0, 10)} ...
+                </div>
+              </li>
+            </ul>
+          )}
         </div>
       </nav>
     </header>
