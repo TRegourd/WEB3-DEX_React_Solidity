@@ -12,8 +12,7 @@ export default function AuthProvider({ children }) {
         window.ethereum,
         "any"
       );
-      // Prompt user for account connections
-      // await provider.send("eth_requestAccounts", []);
+
       if (provider.getSigner()) {
         const signer = provider.getSigner();
         setCurrentAccount(await signer.getAddress());

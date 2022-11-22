@@ -7,6 +7,7 @@ import Cta from "../components/Cta/Cta";
 import Footer from "../components/Footer/Footer";
 import ModalSearch from "../components/Modal/ModalSearch";
 import ModalMenu from "../components/Modal/ModalMenu";
+import Minting from "../components/Minting/Minting";
 
 function CryptoCats() {
   return (
@@ -17,7 +18,9 @@ function CryptoCats() {
         subpage="Collections"
         page="Crypto Cats"
       />
+
       <Collection />
+      <Minting />
       <Cta />
       <Footer />
       <ModalSearch />

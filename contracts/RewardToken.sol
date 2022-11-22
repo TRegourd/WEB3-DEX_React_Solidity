@@ -1,0 +1,21 @@
+// SPDX-License-Identifier: UNLICENSED
+pragma solidity ^0.8.7;
+
+import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
+import "hardhat/console.sol";
+
+contract RewardToken is ERC20, Ownable {
+    address stakingContract;
+
+    constructor() ERC20("Reward Token", "RWDTKN") {}
+
+    function setStakingContract(address _stakingContract) public onlyOwner {
+        stakingContract = _stakingContract;
+    }
+
+    function mint(address to, uint256 amount) external {
+        require(msg.sender == stakingContract, "Not the staking contract");
+        _mint(to, amount);
+    }
+}
