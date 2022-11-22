@@ -20,7 +20,7 @@ function CryptoCats() {
       />
 
       <Collection />
-      <Cta />
+      {/* <Cta /> */}
       <Footer />
       <ModalSearch />
       <ModalMenu />
