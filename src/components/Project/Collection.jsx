@@ -1,16 +1,8 @@
-import React, { Component, useEffect, useState } from "react";
-
-const headData = {
-  sub_heading: "Exclusive",
-  heading: "Multi-chain IGOs",
-  content:
-    "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Laborum obcaecati dignissimos quae quo ad iste ipsum officiis deleniti asperiores sit.",
-  actionBtn: "Participate",
-  filter_1: "All",
-  filter_2: "Ongoing",
-  filter_3: "Upcoming",
-  filter_4: "Ended IGO",
-};
+import React, { useContext, useEffect, useState } from "react";
+import Minting from "../Minting/Minting";
+import axios from "axios";
+import { AuthContext } from "../../AuthProvider";
+import polygonLogo from "../../assets/images/polygon-matic-logo.png";
 
 const data = [
   {
@@ -123,169 +115,137 @@ const socialData = [
 ];
 
 function Collection() {
+  const contractAddress = "0xDF3BB2823642C5bBEEC0061d15FB8815bE23de0B";
+  const { currentAccount } = useContext(AuthContext);
   const [initData, setInitData] = useState({});
+  const [collectionData, setCollectionData] = useState([]);
+  const [userCollection, setUserCollection] = useState([]);
+
+  // Alchemy URL
+  async function fetchcollectionData() {
+    if (currentAccount) {
+      const baseURL = process.env.REACT_APP_ALCHEMY_API_URL;
+      const url = `${baseURL}/getNFTs/?owner=${currentAccount}`;
+
+      const config = {
+        method: "get",
+        url: url,
+      };
+      console.log("...pending");
+
+      axios(config)
+        .then((response) => {
+          setCollectionData(
+            response["data"].ownedNfts.filter((entry) => {
+              return (
+                entry.contract.address.toLowerCase() ===
+                contractAddress.toLowerCase()
+              );
+            })
+          );
+        })
+        .catch((error) => console.log("error", error));
+    }
+  }
+
+  async function getNFTs(collection) {
+    let items = [];
+    collection.map((item) => {
+      axios.get(item.tokenUri.gateway).then((response) => {
+        items.push(response.data);
+      });
+    });
+    setUserCollection(items);
+    console.log(items);
+  }
 
   useEffect(() => {
-    setInitData(headData);
-  });
+    fetchcollectionData();
+  }, [currentAccount]);
+
+  useEffect(() => {
+    collectionData && getNFTs(collectionData);
+  }, [collectionData]);
 
   return (
     <section className="project-area explore-area">
+      <pre>{JSON.stringify(collectionData, null, 2)}</pre>
       <div className="container">
         <div className="row justify-content-center">
           <div className="col-12 col-md-8 col-lg-7">
             {/* Intro */}
             <div className="intro text-center">
               <div className="intro-content">
-                <span className="intro-text">{initData.sub_heading}</span>
-                <h3 className="mt-3 mb-0">{initData.heading}</h3>
+                <span className="intro-text">Collection</span>
+                <h3 className="mt-3 mb-0">Découvrez les Crypto Cats</h3>
                 <p>{initData.content}</p>
               </div>
             </div>
           </div>
         </div>
+        <Minting contractAddress={contractAddress} />
         <div className="row justify-content-center text-center">
           <div className="col-12">
-            {/* Explore Menu */}
-            <div
-              className="explore-menu btn-group btn-group-toggle flex-wrap justify-content-center text-center mb-md-4"
-              data-toggle="buttons"
-            >
-              <label className="btn active d-table text-uppercase p-2">
-                <input
-                  type="radio"
-                  defaultValue="all"
-                  defaultChecked
-                  className="explore-btn"
-                />
-                <span>{initData.filter_1}</span>
-              </label>
-              <label className="btn d-table text-uppercase p-2">
-                <input
-                  type="radio"
-                  defaultValue="ongoing"
-                  className="explore-btn"
-                />
-                <span>{initData.filter_2}</span>
-              </label>
-              <label className="btn d-table text-uppercase p-2">
-                <input
-                  type="radio"
-                  defaultValue="upcoming"
-                  className="explore-btn"
-                />
-                <span>{initData.filter_3}</span>
-              </label>
-              <label className="btn d-table text-uppercase p-2">
-                <input
-                  type="radio"
-                  defaultValue="ended"
-                  className="explore-btn"
-                />
-                <span>{initData.filter_4}</span>
-              </label>
+            <div className="intro text-center">
+              <div className="intro-content">
+                <h3 className="mt-3 mb-0">Your Collection</h3>
+              </div>
             </div>
           </div>
         </div>
         <div className="row explore-items items inner">
-          {data.map((item, idx) => {
-            return (
-              <div
-                key={`pd_${idx}`}
-                className="col-12 col-md-6 col-lg-4 item explore-item"
-                data-groups={item.group}
-              >
-                <div className="card project-card">
-                  <div className="media">
-                    <a href="/project-single">
-                      <img
-                        className="card-img-top avatar-max-lg"
-                        src={item.img}
-                        alt=""
-                      />
-                    </a>
-                    <div className="media-body ml-4">
+          {userCollection &&
+            userCollection.map((item, idx) => {
+              console.log(item);
+              return (
+                <div
+                  key={`pd_${idx}`}
+                  className="col-12 col-md-6 col-lg-4 item explore-item"
+                >
+                  <div className="card project-card">
+                    <div className="media">
                       <a href="/project-single">
-                        <h4 className="m-0">{item.title}</h4>
-                      </a>
-                      <div className="countdown-times">
-                        <h6 className="my-2">Registration in:</h6>
-                        <div
-                          className="countdown d-flex"
-                          data-date={item.reg_date}
+                        <img
+                          className="card-img-top avatar-max-lg"
+                          src={item.image}
+                          alt=""
                         />
-                      </div>
-                    </div>
-                  </div>
-                  {/* Project Body */}
-                  <div className="card-body">
-                    <div className="items">
-                      {/* Single Item */}
-                      <div className="single-item">
-                        <span>Total raise</span>
-                        <span> {item.raise}</span>
-                      </div>
-                      {/* Single Item */}
-                      <div className="single-item">
-                        <span>Valu</span>
-                        <span> {item.val}</span>
-                      </div>
-                      {/* Single Item */}
-                      <div className="single-item">
-                        <span>Min allo</span>
-                        <span> {item.allocation}</span>
-                      </div>
-                    </div>
-                    <div className="item-progress">
-                      <div className="progress mt-4 mt-md-5">
-                        <div
-                          className="progress-bar"
-                          role="progressbar"
-                          style={{ width: "25%" }}
-                          aria-valuenow={25}
-                          aria-valuemin={0}
-                          aria-valuemax={100}
-                        >
-                          {item.progress}
+                      </a>
+                      <div className="media-body ml-4">
+                        <a href="/project-single">
+                          <h4 className="m-0">{item.collection.family}</h4>
+                        </a>
+                        <div className="countdown-times">
+                          <h6 className="my-2">{item.collection.name}</h6>
                         </div>
                       </div>
-                      <div className="progress-sale d-flex justify-content-between mt-3">
-                        <span>{item.mecha}</span>
-                        <span>{item.busd}</span>
+                    </div>
+                    Project Body
+                    <div className="card-body">
+                      <div className="items">
+                        {/* Single Item */}
+                        <div className="single-item">
+                          <span>{item.description}</span>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                  {/* Project Footer */}
-                  <div className="project-footer d-flex align-items-center mt-4 mt-md-5">
-                    <a
-                      className="btn btn-bordered-white btn-smaller"
-                      href="/project-single"
-                    >
-                      {initData.actionBtn}
-                    </a>
-                    {/* Social Share */}
-                    <div className="social-share ml-auto">
-                      <ul className="d-flex list-unstyled">
-                        {socialData.map((item, idx) => {
-                          return (
-                            <li key={`sd_${idx}`}>
-                              <a href="/#">
-                                <i className={item.icon} />
-                              </a>
-                            </li>
-                          );
-                        })}
-                      </ul>
+                    {/* Project Footer */}
+                    <div className="project-footer d-flex align-items-center mt-4 mt-md-5">
+                      <a
+                        className="btn btn-bordered-white btn-smaller"
+                        href="/project-single"
+                      >
+                        View on Opensea
+                      </a>
+                    </div>
+                    {/* Blockchain Icon */}
+                    <div className="blockchain-icon">
+                      <img src={polygonLogo} alt="" />
                     </div>
                   </div>
-                  {/* Blockchain Icon */}
-                  <div className="blockchain-icon">
-                    <img src={item.blockchain} alt="" />
-                  </div>
                 </div>
-              </div>
-            );
-          })}
+              );
+            })}
         </div>
       </div>
     </section>

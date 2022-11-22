@@ -20,7 +20,6 @@ function CryptoCats() {
       />
 
       <Collection />
-      <Minting />
       <Cta />
       <Footer />
       <ModalSearch />

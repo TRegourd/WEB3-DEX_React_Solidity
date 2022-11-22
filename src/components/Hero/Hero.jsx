@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useContext } from "react";
 import { useEffect } from "react";
 import { useState } from "react";
+import { AuthContext } from "../../AuthProvider";
 
 const data = {
   sub_heading: "GameOn",
@@ -10,6 +11,9 @@ const data = {
 
 function Hero() {
   const [initData, setInitData] = useState({});
+  const { currentAccount, setCurrentAccount } = useContext(AuthContext);
+
+  console.log(currentAccount);
 
   useEffect(() => {
     setInitData(data);

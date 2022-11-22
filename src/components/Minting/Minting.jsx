@@ -2,13 +2,12 @@ import React from "react";
 import { useState, useEffect } from "react";
 import { ethers } from "ethers";
 
+import hiddenImg from "../../assets/images/hidden.jpeg";
+import polygonLogo from "../../assets/images/polygon-matic-logo.png";
 import contractArtifact from "../../artifacts/contracts/myAwesomeNFT.sol/MyAwesomeNFT.json";
 
-const contractAddress = "0xDF3BB2823642C5bBEEC0061d15FB8815bE23de0B";
-
-function Minting() {
+function Minting({ contractAddress }) {
   const [data, setData] = useState({});
-  const [error, setError] = useState("");
 
   useEffect(() => {
     fetchData();
@@ -35,7 +34,7 @@ function Minting() {
 
         setData(object);
       } catch (err) {
-        setError(err.message);
+        console.log(err.message);
       }
     }
   }
@@ -69,43 +68,71 @@ function Minting() {
   }
 
   return (
-    <section className="staking-area">
-      <div className="container">
-        <div className="row">
-          <div className="col-12 col-md-7">
-            <div className="card no-hover staking-card single-staking">
-              <h3 className="m-0">Get Yours</h3>
-              <span className="balance">
-                Price : {data.price && ethers.utils.formatEther(data.price)} ETH
+    <section className="minting-area">
+      <div className="card project-card">
+        <div className="media">
+          <a href="/project-single">
+            <img
+              className="card-img-top avatar-max-lg"
+              src={hiddenImg}
+              alt=""
+            />
+          </a>
+          <div className="media-body ml-4">
+            <a href="/project-single">
+              <h4 className="m-0">Mint</h4>
+            </a>
+            <div className="countdown-times">
+              <h6 className="my-2">Get your CryptoCat</h6>
+            </div>
+          </div>
+        </div>
+        {/* Project Body */}
+        <div className="card-body">
+          <div className="items">
+            {/* Single Item */}
+            <div className="single-item">
+              <span>Total supply : </span>
+              <span>{data.totalSupply}</span>
+            </div>
+            {/* Single Item */}
+            <div className="single-item">
+              <span>Total Minted : </span>
+              <span>{data.mintedSupply}</span>
+            </div>
+          </div>
+          <div className="item-progress">
+            <div className="progress mt-4 mt-md-5">
+              <div
+                className="progress-bar"
+                role="progressbar"
+                style={{
+                  width: `${(data.mintedSupply / data.totalSupply) * 100}%`,
+                }}
+                aria-valuenow={(data.mintedSupply / data.totalSupply) * 100}
+                aria-valuemin={0}
+                aria-valuemax={100}
+              >
+                {(data.mintedSupply / data.totalSupply) * 100}%
+              </div>
+            </div>
+            <div className="progress-sale d-flex justify-content-between mt-3">
+              <span>Price</span>
+              <span>
+                {data.price && ethers.utils.formatEther(data.price)} ETH
               </span>
-              <div className="tab-content mt-md-3" id="myTabContent"></div>
-              <div className="input-box my-4">
-                <div className="input-area d-flex flex-column flex-md-row mb-3">
-                  <div className="input-text">
-                    <input type="text" placeholder={0.0} />
-                  </div>
-                  <button
-                    onClick={mint}
-                    className="btn input-btn mt-2 mt-md-0 ml-md-3"
-                  >
-                    Mint
-                  </button>
-                </div>
-              </div>
             </div>
           </div>
-          <div className="col-12 col-md-5">
-            <div className="staking-items mt-4 mt-md-0">
-              <div className="card no-hover staking-card mb-5">
-                <h3 className="m-0">{data.mintedSupply}</h3>
-                <p>NFT Minted</p>
-              </div>
-              <div className="card no-hover staking-card">
-                <h3 className="m-0">{data.totalSupply}</h3>
-                <p>Total NFT in collection</p>
-              </div>
-            </div>
-          </div>
+        </div>
+        {/* Project Footer */}
+        <div className="project-footer d-flex align-items-center mt-4 mt-md-5">
+          <button className="btn btn-bordered-white btn-smaller" onClick={mint}>
+            Mint
+          </button>
+        </div>
+        {/* Blockchain Icon */}
+        <div className="blockchain-icon">
+          <img src={polygonLogo} alt="" />
         </div>
       </div>
     </section>
