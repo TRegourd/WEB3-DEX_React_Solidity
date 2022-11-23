@@ -1,6 +1,6 @@
 const { MerkleTree } = require("merkletreejs");
 const keccak256 = require("keccak256");
-const whiteList = require("./whiteList.json");
+const whiteList = require("../src/data/whiteList.json");
 
 async function main() {
   const [deployer] = await ethers.getSigners();
@@ -21,16 +21,16 @@ async function main() {
   const NFT = await ethers.getContractFactory("MyAwesomeNFT_witheList");
   const nft = await NFT.deploy(root);
 
-  const Token = await ethers.getContractFactory("RewardToken");
-  const token = await Token.deploy();
+  // const Token = await ethers.getContractFactory("RewardToken");
+  // const token = await Token.deploy();
 
-  const Staking = await ethers.getContractFactory("NFTStaking");
-  const staking = await Staking.deploy();
+  // const Staking = await ethers.getContractFactory("NFTStaking");
+  // const staking = await Staking.deploy();
 
   // Je peux interagir avec
   console.log("NFT Contract address:", nft.address);
-  console.log("Token Contract address:", token.address);
-  console.log("Staking Contract address:", staking.address);
+  // console.log("Token Contract address:", token.address);
+  // console.log("Staking Contract address:", staking.address);
 }
 
 main()

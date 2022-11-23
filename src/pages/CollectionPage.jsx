@@ -8,8 +8,6 @@ import Footer from "../components/Footer/Footer";
 import ModalSearch from "../components/Modal/ModalSearch";
 import ModalMenu from "../components/Modal/ModalMenu";
 import Minting from "../components/Minting/Minting";
-import { useLocation, useParams } from "react-router";
-import { useEffect } from "react";
 
 function CollectionPage({ collection }) {
   return (

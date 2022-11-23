@@ -1,9 +1,8 @@
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
 import { ethers } from "ethers";
-import { useEffect } from "react";
 import { AuthContext } from "../../AuthProvider";
 import { Link } from "react-router-dom";
-import Collections from "../../data.json";
+import Collections from "../../data/collections.json";
 
 function Header() {
   const { currentAccount, setCurrentAccount } = useContext(AuthContext);

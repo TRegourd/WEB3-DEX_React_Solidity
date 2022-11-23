@@ -4,6 +4,7 @@ pragma solidity ^0.8.0;
 // Permet d'ajouter directement les smarts contract d'openZeppelin, fonctionne avec d'autre contracts dans vos nodemodules,
 // ou des contract dans votre dossier
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
+import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 import "@openzeppelin/contracts/utils/cryptography/MerkleProof.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/security/Pausable.sol";
@@ -14,6 +15,7 @@ import "hardhat/console.sol";
 
 contract MyAwesomeNFT_witheList is
     ERC721URIStorage,
+    ERC721Enumerable,
     Ownable,
     Pausable,
     ReentrancyGuard
@@ -30,7 +32,7 @@ contract MyAwesomeNFT_witheList is
     string private uri_default = "www.google.com";
     string private uri_base = "";
 
-    uint256 private tokenPrice = 0.001 ether;
+    uint256 public tokenPrice = 0.001 ether;
     uint256 public maxSupply = 10;
 
     constructor(bytes32 _merkleroot) ERC721("CryptoCats", "CATS") {
@@ -70,7 +72,7 @@ contract MyAwesomeNFT_witheList is
         public
         view
         virtual
-        override
+        override(ERC721, ERC721URIStorage)
         returns (string memory)
     {
         require(_exists(tokenId));
@@ -110,7 +112,6 @@ contract MyAwesomeNFT_witheList is
     {
         require(isWhiteListed(msg.sender, _proof), "Not on the whitelist");
         require(!claimedWhiteListNFTs[msg.sender], "Already claimed");
-        require(msg.value >= tokenPrice, "Not enough money sent");
         require(
             _tokenIds.current() + 1 <= maxSupply,
             "Not enough token remaining"
@@ -118,12 +119,69 @@ contract MyAwesomeNFT_witheList is
         _tokenIds.increment();
         uint256 mintedTokenId = _tokenIds.current();
         claimedWhiteListNFTs[msg.sender] = true;
-        _safeMint(msg.sender, mintedTokenId, "");
+        _safeMint(msg.sender, mintedTokenId);
+    }
+
+    function unitMint() external payable whenNotPaused nonReentrant {
+        require(msg.value >= tokenPrice, "Not enough money sent");
+        require(
+            _tokenIds.current() + 1 <= maxSupply,
+            "Not enough token remaining"
+        );
+        _tokenIds.increment();
+        uint256 mintedTokenId = _tokenIds.current();
+
+        _safeMint(msg.sender, mintedTokenId);
+    }
+
+    function multipleMint(uint256 _amount)
+        external
+        payable
+        whenNotPaused
+        nonReentrant
+    {
+        require(msg.value >= tokenPrice * _amount, "Not enough money sent");
+        require(
+            _tokenIds.current() + _amount <= maxSupply,
+            "Not enough token remaining"
+        );
+        for (uint256 i = 0; i < _amount; i++) {
+            _tokenIds.increment();
+            uint256 mintedTokenId = _tokenIds.current();
+            _safeMint(msg.sender, mintedTokenId);
+        }
     }
 
     // ------------------------------------------Withdraw -----------------------------------------------------
 
     function withdrawMoney() public onlyOwner nonReentrant {
         payable(msg.sender).transfer(address(this).balance);
+    }
+
+    //------------------------------------------ Overrides -----------------------------------------------------
+
+    function _beforeTokenTransfer(
+        address from,
+        address to,
+        uint256 tokenId,
+        uint256 batchSize
+    ) internal override(ERC721, ERC721Enumerable) {
+        super._beforeTokenTransfer(from, to, tokenId, batchSize);
+    }
+
+    function _burn(uint256 tokenId)
+        internal
+        override(ERC721, ERC721URIStorage)
+    {
+        super._burn(tokenId);
+    }
+
+    function supportsInterface(bytes4 interfaceId)
+        public
+        view
+        override(ERC721, ERC721Enumerable)
+        returns (bool)
+    {
+        return super.supportsInterface(interfaceId);
     }
 }

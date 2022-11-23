@@ -23,7 +23,7 @@ import Tokenomics from "../pages/tokenomics";
 import Tier from "../pages/tier-system";
 import Blog from "../pages/blog";
 import BlogSingle from "../pages/blog-single";
-import Collections from "../data.json";
+import Collections from "../data/collections.json";
 
 function Router() {
   return (
