@@ -3497,3 +3497,9 @@ a.page-numbers:hover {
     padding: 2.5rem 2rem;
   }
 }
+
+.collection {
+  gap: 10px;
+  justify-content: center;
+  padding-top: 10px;
+}

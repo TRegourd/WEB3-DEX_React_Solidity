@@ -8,16 +8,16 @@ async function main() {
   const NFT = await ethers.getContractFactory("MyAwesomeNFT");
   const nft = await NFT.deploy();
 
-  const Token = await ethers.getContractFactory("RewardToken");
-  const token = await Token.deploy();
+  // const Token = await ethers.getContractFactory("RewardToken");
+  // const token = await Token.deploy();
 
-  const Staking = await ethers.getContractFactory("NFTStaking");
-  const staking = await Staking.deploy();
+  // const Staking = await ethers.getContractFactory("NFTStaking");
+  // const staking = await Staking.deploy();
 
   // Je peux interagir avec
   console.log("NFT Contract address:", nft.address);
-  console.log("Token Contract address:", token.address);
-  console.log("Staking Contract address:", staking.address);
+  // console.log("Token Contract address:", token.address);
+  // console.log("Staking Contract address:", staking.address);
 }
 
 main()

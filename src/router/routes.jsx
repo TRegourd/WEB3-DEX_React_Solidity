@@ -4,7 +4,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 // importing all the themes
 import Home from "../pages/home";
 import ProjectOne from "../pages/project-one";
-import CrytpoCats from "../pages/CryptoCats";
+import CollectionPage from "../pages/CollectionPage";
 import ProjectThree from "../pages/project-three";
 import ProjectFour from "../pages/project-four";
 import ProjectSingle from "../pages/project-single";
@@ -23,6 +23,7 @@ import Tokenomics from "../pages/tokenomics";
 import Tier from "../pages/tier-system";
 import Blog from "../pages/blog";
 import BlogSingle from "../pages/blog-single";
+import Collections from "../data.json";
 
 function Router() {
   return (
@@ -31,7 +32,6 @@ function Router() {
         <Routes>
           <Route exact path="/" element={<Home />} />
           <Route exact path="/project-one" element={<ProjectOne />} />
-          <Route exact path="/CryptoCats" element={<CrytpoCats />} />
           <Route exact path="/project-three" element={<ProjectThree />} />
           <Route exact path="/project-four" element={<ProjectFour />} />
           <Route exact path="/project-single" element={<ProjectSingle />} />
@@ -50,6 +50,17 @@ function Router() {
           <Route exact path="/tier-system" element={<Tier />} />
           <Route exact path="/blog" element={<Blog />} />
           <Route exact path="/blog-single" element={<BlogSingle />} />
+          {Collections &&
+            Collections.map((collection) => {
+              return (
+                <Route
+                  exact
+                  key={collection.slug}
+                  path={`/${collection.slug}`}
+                  element={<CollectionPage collection={collection} />}
+                />
+              );
+            })}
         </Routes>
       </BrowserRouter>
     </div>

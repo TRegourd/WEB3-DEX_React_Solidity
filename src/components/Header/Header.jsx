@@ -2,6 +2,8 @@ import React, { useContext, useState } from "react";
 import { ethers } from "ethers";
 import { useEffect } from "react";
 import { AuthContext } from "../../AuthProvider";
+import { Link } from "react-router-dom";
+import Collections from "../../data.json";
 
 function Header() {
   const { currentAccount, setCurrentAccount } = useContext(AuthContext);
@@ -40,16 +42,16 @@ function Header() {
                 Buy NFT <i className="icon-arrow-down" />
               </a>
               <ul className="dropdown-menu">
-                <li className="nav-item">
-                  <a href="/CryptoCats" className="nav-link">
-                    Crypto Cats
-                  </a>
-                </li>
-                <li className="nav-item">
-                  <a href="/project-three" className="nav-link">
-                    Other Collection
-                  </a>
-                </li>
+                {Collections &&
+                  Collections.map((collection) => {
+                    return (
+                      <li key={collection.slug} className="nav-item">
+                        <Link to={`/${collection.slug}`} className="nav-link">
+                          {collection.name}
+                        </Link>
+                      </li>
+                    );
+                  })}
               </ul>
             </li>
             <li className="nav-item">

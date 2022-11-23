@@ -1,26 +1,30 @@
-import React, { Component } from "react";
+import React from "react";
 
 import Header from "../components/Header/Header";
 import Breadcrumb from "../components/Breadcrumb/Breadcrumb";
-import Collection from "../components/Project/Collection";
+import CollectionList from "../components/Project/CollectionList";
 import Cta from "../components/Cta/Cta";
 import Footer from "../components/Footer/Footer";
 import ModalSearch from "../components/Modal/ModalSearch";
 import ModalMenu from "../components/Modal/ModalMenu";
 import Minting from "../components/Minting/Minting";
+import { useLocation, useParams } from "react-router";
+import { useEffect } from "react";
 
-function CryptoCats() {
+function CollectionPage({ collection }) {
   return (
     <div className="main">
       <Header />
       <Breadcrumb
-        title="Crypto Cats"
+        title={collection.name}
         subpage="Collections"
-        page="Crypto Cats"
+        page={collection.name}
       />
-
-      <Collection />
-      {/* <Cta /> */}
+      <section>
+        <Minting collection={collection} />
+        <CollectionList collection={collection} />
+      </section>
+      <Cta />
       <Footer />
       <ModalSearch />
       <ModalMenu />
@@ -28,4 +32,4 @@ function CryptoCats() {
   );
 }
 
-export default CryptoCats;
+export default CollectionPage;

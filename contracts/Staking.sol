@@ -6,8 +6,10 @@ pragma solidity ^0.8.0;
 import "./myAwesomeNFT.sol";
 import "./RewardToken.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
+import "@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol";
 
-contract NFTStaking is Ownable {
+contract NFTStaking is Ownable, IERC721Receiver {
     RewardToken token;
     MyAwesomeNFT nft;
 
@@ -49,6 +51,15 @@ contract NFTStaking is Ownable {
         _;
     }
 
+    function onERC721Received(
+        address operator,
+        address from,
+        uint256 id,
+        bytes calldata data
+    ) external override returns (bytes4) {
+        return bytes4(IERC721Receiver.onERC721Received.selector);
+    }
+
     function stake(uint256 _tokenID) public onlyOwnerOf(_tokenID) {
         require(nftsStaked[_tokenID].stakingTime == 0, "Already staked");
         Staking memory newStaking = Staking(
@@ -59,7 +70,7 @@ contract NFTStaking is Ownable {
         nftsStaked[_tokenID] = newStaking;
         totalStaking++;
         emit Staked(_tokenID, block.timestamp, msg.sender);
-        nft.transferFrom(msg.sender, address(this), _tokenID);
+        nft.safeTransferFrom(msg.sender, address(this), _tokenID);
     }
 
     function claim(uint256 _tokenID) public {
