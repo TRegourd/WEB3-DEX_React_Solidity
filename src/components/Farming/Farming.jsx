@@ -1,22 +1,9 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
+import React from "react";
+
 import FarmingCard from "./FamringCard";
 
-const BASE_URL =
-  "https://my-json-server.typicode.com/themeland/gameon-json-1/farming";
 export default function Farming({ collections }) {
   console.log(collections);
-  const [farmingData, setFarmingData] = useState();
-
-  useEffect(() => {
-    axios
-      .get(`${BASE_URL}`)
-      .then((res) => {
-        setFarmingData(res.data.farmingData);
-        // console.log(data)
-      })
-      .catch((err) => console.log(err));
-  }, []);
 
   return (
     <section className="staking-area">

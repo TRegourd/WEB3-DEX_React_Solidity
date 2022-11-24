@@ -3,11 +3,15 @@ import { ethers } from "ethers";
 import axios from "axios";
 import NFTcontractArtifact from "../../artifacts/contracts/myAwesomeNFT.sol/MyAwesomeNFT.json";
 import StakingContractArtifact from "../../artifacts/contracts/Staking.sol/NFTStaking.json";
+import RewardContractArtifact from "../../artifacts/contracts/RewardToken.sol/RewardToken.json";
 
 export default function FarmingCard({ collection }) {
-  const [data, setData] = useState();
+  const [collectionData, setCollectionData] = useState();
+  const [stakingUserData, setStakingUserData] = useState();
+  const [stakingCollectionData, setStakingCollectionData] = useState();
   const NftContractAddress = collection.NftsAddress;
   const StakingContractAddress = collection.StakingAddress;
+  const RewardContractAddress = collection.RewardsAddress;
 
   const item = {
     id: 3,
@@ -35,7 +39,8 @@ export default function FarmingCard({ collection }) {
 
   useEffect(() => {
     fetchCollectionData();
-    fetchStakingData();
+    fetchUserStakingUserData();
+    fetchCollectionStakingUserData();
   }, []);
 
   async function fetchCollectionData() {
@@ -64,32 +69,86 @@ export default function FarmingCard({ collection }) {
           })
         );
 
-        setData(items);
+        setCollectionData(items);
       } catch (err) {
         console.log(err.message);
       }
     }
   }
 
-  async function fetchStakingData() {
+  async function fetchCollectionStakingUserData() {
     if (typeof window.ethereum !== "undefined") {
       let accounts = await window.ethereum.request({
         method: "eth_requestAccounts",
       });
       const provider = new ethers.providers.Web3Provider(window.ethereum);
-      const contract = new ethers.Contract(
+      const StakingContract = new ethers.Contract(
         StakingContractAddress,
         StakingContractArtifact.abi,
         provider
       );
+      const NFTContract = new ethers.Contract(
+        NftContractAddress,
+        NFTcontractArtifact.abi,
+        provider
+      );
+
+      const RewardContract = new ethers.Contract(
+        RewardContractAddress,
+        RewardContractArtifact.abi,
+        provider
+      );
 
       try {
-        const totalContractStaking = await contract.totalStaking();
-        const totalUserStaking = await contract.getStakedTokens({
+        const totalContractStaking = await StakingContract.totalStaking();
+        const rewardToken = await RewardContract.symbol();
+
+        const data = {
+          totalContractStaking: parseInt(totalContractStaking._hex, 16),
+          rewardToken: rewardToken,
+        };
+
+        setStakingCollectionData(data);
+        console.log(data);
+      } catch (err) {
+        console.log(err.message);
+      }
+    }
+  }
+
+  async function fetchUserStakingUserData() {
+    if (typeof window.ethereum !== "undefined") {
+      let accounts = await window.ethereum.request({
+        method: "eth_requestAccounts",
+      });
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const StakingContract = new ethers.Contract(
+        StakingContractAddress,
+        StakingContractArtifact.abi,
+        provider
+      );
+      const NFTContract = new ethers.Contract(
+        NftContractAddress,
+        NFTcontractArtifact.abi,
+        provider
+      );
+
+      try {
+        const totalContractStaking = await StakingContract.totalStaking();
+        const totalUserStaking = await StakingContract.getStakedTokens({
           from: accounts[0],
         });
 
         console.log(totalContractStaking, totalUserStaking);
+
+        const items = await Promise.all(
+          totalUserStaking.map(async function (item) {
+            return await fetchItem(NFTContract, item);
+          })
+        );
+
+        setStakingUserData(items);
+        console.log(items);
       } catch (err) {
         console.log(err.message);
       }
@@ -122,7 +181,7 @@ export default function FarmingCard({ collection }) {
     };
     return tokenData;
   }
-  console.log(data);
+  console.log(collectionData);
   return (
     <div key={`fard_${collection.id}`} className="single-accordion-item">
       {/* Card Header */}
@@ -152,24 +211,25 @@ export default function FarmingCard({ collection }) {
             </div>
             <div className="row staking-info align-items-center justify-content-center mt-4 mt-md-5">
               <div className="col single-item">
-                <span>{item.staked}</span>
-                <span>Staked</span>
+                <span>{collectionData?.length}</span>
+                <span>Available</span>
               </div>
               <div className="col single-item">
-                <span>{item.earned}</span>
-                <span>Earned</span>
+                <span>{stakingUserData?.length}</span>
+                <span>Stacked</span>
               </div>
               <div className="col single-item">
-                <span>{item.apy}</span>
-                <span>APY</span>
+                <span>{stakingCollectionData?.rewardToken}</span>
+                <span>Earn</span>
               </div>
+
               <div className="col single-item">
                 <span>{item.price}</span>
                 <span>LP Price</span>
               </div>
               <div className="col single-item">
-                <span>{item.value}</span>
-                <span>Total Value Locked</span>
+                <span>{stakingCollectionData?.totalContractStaking}</span>
+                <span>Total contract Locked</span>
               </div>
             </div>
           </button>
@@ -185,12 +245,12 @@ export default function FarmingCard({ collection }) {
           <div className="row">
             {/* Single Staking Item */}
             <div className="col-12 col-md-4 single-staking-item input-box">
-              <span className="item-title mb-2">{item.input_title_1}</span>
+              <span className="item-title mb-2">Stake</span>
               <div className="input-area d-flex flex-column">
                 <select name="tokenId" id="tokenId-select">
                   <option value="">--Please choose NFT--</option>
-                  {data &&
-                    data.map((token) => {
+                  {collectionData &&
+                    collectionData.map((token) => {
                       return (
                         <option key={token.tokenId} value={token.tokenId}>
                           {token.name}
@@ -200,20 +260,28 @@ export default function FarmingCard({ collection }) {
                 </select>
 
                 <a href="#" className="btn input-btn mt-2">
-                  {item.input_btn_1}
+                  Stake
                 </a>
               </div>
             </div>
             {/* Single Staking Item */}
             <div className="col-12 col-md-4 single-staking-item input-box">
-              <span className="item-title mb-2">{item.input_title_2}</span>
               <div className="input-area d-flex flex-column">
-                <div className="input-text">
-                  <input type="text" placeholder={0.0} />
-                  <a href="#">Max</a>
-                </div>
+                <span className="item-title mb-2">UnStake</span>
+                <select name="tokenId" id="tokenId-select">
+                  <option value="">--Please choose NFT--</option>
+                  {stakingUserData &&
+                    stakingUserData.map((token) => {
+                      return (
+                        <option key={token.tokenId} value={token.tokenId}>
+                          {token.name}
+                        </option>
+                      );
+                    })}
+                </select>
+
                 <a href="#" className="btn input-btn mt-2">
-                  {item.input_btn_2}
+                  UnStake
                 </a>
               </div>
             </div>
@@ -221,8 +289,10 @@ export default function FarmingCard({ collection }) {
             <div className="col-12 col-md-4 single-staking-item input-box">
               <span className="item-title mb-2">{item.reward_title}</span>
               <div className="input-area d-flex flex-column">
-                <h4 className="price m-0">{item.reward}</h4>
-                <span className="reward my-2">{item.reward_content}</span>
+                <h4 className="price m-0">
+                  0.0 {stakingCollectionData?.rewardToken}
+                </h4>
+                <span className="reward my-2"></span>
                 <a href="/login" className="btn input-btn mt-2">
                   <i className="fa-solid fa-lock mr-1" /> {item.actionBtn}
                 </a>

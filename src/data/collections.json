@@ -7,6 +7,7 @@
     "description": "Discover the CryptoCats",
     "NftsAddress": "0xBDd993ed4B9665BCF0BB476f3B8A3fCCCcA6c930",
     "StakingAddress": "0x62EB677D31275f6f29d2fa31dD6C307b92Dc00BB",
+    "RewardsAddress": "0x476C0E74c26c41dD28729EaF5258dFcE5381cb9C",
     "openSeaBaseUrl": "https://testnets.opensea.io/fr/assets/mumbai/",
     "collectionBaseUrl": "https://testnets.opensea.io/fr/collection/cryptocats-kk2xw81uep",
     "farmable": true,
