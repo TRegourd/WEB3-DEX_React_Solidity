@@ -3,8 +3,6 @@ import React from "react";
 import FarmingCard from "./FamringCard";
 
 export default function Farming({ collections }) {
-  console.log(collections);
-
   return (
     <section className="staking-area">
       <div id="gameon-accordion" className="container accordion">
@@ -13,7 +11,7 @@ export default function Farming({ collections }) {
             {/* Single Accordion Item */}
             {collections &&
               collections.map((collection, idx) => {
-                return <FarmingCard collection={collection} />;
+                return <FarmingCard key={idx} collection={collection} />;
               })}
           </div>
         </div>

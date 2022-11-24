@@ -92,15 +92,14 @@ function Minting({ collection }) {
           value: data.price,
         };
         const transaction = await contract.unitMint(overrides);
-        console.log(transaction);
-        console.log("pending");
+
         toast.promise(transaction.wait(), {
           pending: "Minting in progress 🔗",
           success: "NFT Minted 👌",
           error: "Transaction rejected 🤯",
         });
         await transaction.wait();
-        console.log("finished");
+
         fetchData();
       } catch (err) {
         console.log(err.message);
@@ -130,8 +129,6 @@ function Minting({ collection }) {
           from: accounts[0],
         };
         const transaction = await contract.whitheListMint(proof, overrides);
-
-        console.log(transaction);
 
         toast.promise(transaction.wait(), {
           pending: "Minting in progress 🔗",

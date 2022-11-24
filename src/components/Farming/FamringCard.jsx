@@ -116,7 +116,6 @@ export default function FarmingCard({ collection }) {
         };
 
         setStakingCollectionData(data);
-        console.log(data);
 
         const isApproved = await NFTContract.isApprovedForAll(
           accounts[0],
@@ -148,12 +147,9 @@ export default function FarmingCard({ collection }) {
       );
 
       try {
-        const totalContractStaking = await StakingContract.totalStaking();
         const totalUserStaking = await StakingContract.getStakedTokens({
           from: accounts[0],
         });
-
-        console.log(totalContractStaking, totalUserStaking);
 
         const items = await Promise.all(
           totalUserStaking.map(async function (item) {
@@ -162,10 +158,7 @@ export default function FarmingCard({ collection }) {
         );
 
         setStakingUserData(items);
-        console.log(items);
-      } catch (err) {
-        console.log(err.message);
-      }
+      } catch (err) {}
     }
   }
 
@@ -214,15 +207,14 @@ export default function FarmingCard({ collection }) {
           from: accounts[0],
         };
         const transaction = await contract.stake(stakeId, overrides);
-        console.log(transaction);
-        console.log("pending");
+
         toast.promise(transaction.wait(), {
           pending: "Staking in progress 🔗",
           success: "NFT Staked 👌",
           error: "Transaction rejected 🤯",
         });
         await transaction.wait();
-        console.log("finished");
+
         fetchCollectionData();
         fetchUserStakingUserData();
         fetchStakingCollectionData();
@@ -247,15 +239,14 @@ export default function FarmingCard({ collection }) {
       );
       try {
         const transaction = await contract.unstake(unStakeId);
-        console.log(transaction);
-        console.log("pending");
+
         toast.promise(transaction.wait(), {
           pending: "UnStaking in progress 🔗",
           success: "NFT unStaked 👌",
           error: "Transaction rejected 🤯",
         });
         await transaction.wait();
-        console.log("finished");
+
         setUnStakeId("");
         fetchCollectionData();
         fetchUserStakingUserData();
@@ -290,15 +281,14 @@ export default function FarmingCard({ collection }) {
           StakingContract.address,
           { from: accounts[0] }
         );
-        console.log(transaction);
-        console.log("pending");
+
         toast.promise(transaction.wait(), {
           pending: "Approving in progress 🔗",
           success: "Approved 👌",
           error: "Transaction rejected 🤯",
         });
         await transaction.wait();
-        console.log("finished");
+
         fetchStakingCollectionData();
       } catch (err) {
         console.log(err.message);
@@ -314,7 +304,6 @@ export default function FarmingCard({ collection }) {
     setStakeId(event.target?.value);
   };
 
-  console.log(collectionData);
   return (
     <div key={`fard_${collection.id}`} className="single-accordion-item">
       {/* Card Header */}
@@ -438,9 +427,9 @@ export default function FarmingCard({ collection }) {
                     0.0 {stakingCollectionData?.rewardToken}
                   </h4>
                   <span className="reward my-2"></span>
-                  <a href="/login" className="btn input-btn mt-2">
-                    <i className="fa-solid fa-lock mr-1" /> {item.actionBtn}
-                  </a>
+                  <button className="btn input-btn mt-2">
+                    <i className="" /> Claim
+                  </button>
                 </div>
               </div>
             </div>
