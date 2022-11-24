@@ -7,7 +7,7 @@ import contractArtifact from "../../artifacts/contracts/myAwesomeNFT.sol/MyAweso
 import { useLocation } from "react-router";
 
 function Collection({ collection }) {
-  const contractAddress = collection.address;
+  const contractAddress = collection.NftsAddress;
 
   const [data, setData] = useState();
 
@@ -55,9 +55,11 @@ function Collection({ collection }) {
   async function fetchItem(contract, item) {
     const link =
       collection?.openSeaBaseUrl +
-      collection.address +
+      collection.NftsAddress +
       "/" +
       parseInt(item._hex, 16);
+
+    const blockchainLogo = collection.blockchainLogo;
 
     const tokenUri = await contract.tokenURI(item._hex);
     const HttpTokenUri = tokenUri.replace("ipfs://", "https://ipfs.io/ipfs/");
@@ -66,7 +68,12 @@ function Collection({ collection }) {
       "ipfs://",
       "https://ipfs.io/ipfs/"
     );
-    const tokenData = { ...meta.data, link: link, image: HttpTokenImage };
+    const tokenData = {
+      ...meta.data,
+      link: link,
+      image: HttpTokenImage,
+      blockchainLogo: blockchainLogo,
+    };
     return tokenData;
   }
 

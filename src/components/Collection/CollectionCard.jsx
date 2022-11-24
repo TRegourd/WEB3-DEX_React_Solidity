@@ -1,5 +1,3 @@
-import polygonLogo from "../../assets/images/polygon-matic-logo.png";
-
 export default function CollectionCard({ item }) {
   if (item) {
     return (
@@ -32,7 +30,7 @@ export default function CollectionCard({ item }) {
         </div>
         {/* Blockchain Icon */}
         <div className="blockchain-icon">
-          <img src={polygonLogo} alt="" />
+          <img src={item.blockchainLogo} alt="" />
         </div>
       </div>
     );

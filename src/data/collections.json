@@ -1,10 +1,16 @@
 [
   {
+    "id": 1,
     "slug": "CryptoCats",
     "name": "Crypto Cats",
+    "category": "Game",
     "description": "Discover the CryptoCats",
-    "address": "0xBDd993ed4B9665BCF0BB476f3B8A3fCCCcA6c930",
+    "NftsAddress": "0xBDd993ed4B9665BCF0BB476f3B8A3fCCCcA6c930",
+    "StakingAddress": "0x62EB677D31275f6f29d2fa31dD6C307b92Dc00BB",
     "openSeaBaseUrl": "https://testnets.opensea.io/fr/assets/mumbai/",
-    "collectionBaseUrl": "https://testnets.opensea.io/fr/collection/cryptocats-ixesf02ixt"
+    "collectionBaseUrl": "https://testnets.opensea.io/fr/collection/cryptocats-kk2xw81uep",
+    "farmable": true,
+    "collectionLogo": "/img/hidden.jpeg",
+    "blockchainLogo": "/img/polygon-matic-logo.png"
   }
 ]

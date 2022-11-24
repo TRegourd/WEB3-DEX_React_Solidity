@@ -69,7 +69,7 @@ function Header() {
                   </a>
                 </li>
                 <li className="nav-item">
-                  <a href="/project-two" className="nav-link">
+                  <a href="/farming" className="nav-link">
                     NFT Farming
                   </a>
                 </li>

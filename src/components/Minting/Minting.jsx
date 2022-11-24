@@ -2,8 +2,6 @@ import React, { useContext } from "react";
 import { useState, useEffect } from "react";
 import { ethers } from "ethers";
 
-import hiddenImg from "../../assets/images/hidden.jpeg";
-import polygonLogo from "../../assets/images/polygon-matic-logo.png";
 import contractArtifact from "../../artifacts/contracts/myAwesomeNFT_whitelist.sol/MyAwesomeNFT_witheList.json";
 
 import { ToastContainer, toast } from "react-toastify";
@@ -19,19 +17,18 @@ function Minting({ collection }) {
   const { currentAccount } = useContext(AuthContext);
 
   const [data, setData] = useState({});
-  const contractAddress = collection.address;
+  const contractAddress = collection.NftsAddress;
 
   let addressList = [];
   whiteList.map((entry) => {
     addressList.push(entry.address);
   });
   const isWhiteListed = whiteList.some(
-    (entry) => entry.address == currentAccount
+    (entry) => entry.address === currentAccount
   );
 
   const leaves = addressList.map((address) => keccak256(address));
   const tree = new MerkleTree(leaves, keccak256, { sort: true });
-  const root = tree.getHexRoot();
 
   useEffect(() => {
     fetchData();
@@ -135,14 +132,14 @@ function Minting({ collection }) {
         const transaction = await contract.whitheListMint(proof, overrides);
 
         console.log(transaction);
-        console.log("pending");
+
         toast.promise(transaction.wait(), {
           pending: "Minting in progress 🔗",
           success: "NFT Minted 👌",
           error: "Transaction rejected 🤯",
         });
         await transaction.wait();
-        console.log("finished");
+
         fetchData();
       } catch (err) {
         toast.error("Transaction rejected 🤯");
@@ -171,7 +168,7 @@ function Minting({ collection }) {
               <a href={collection?.collectionBaseUrl} target="blank">
                 <img
                   className="card-img-top avatar-max-lg"
-                  src={hiddenImg}
+                  src={collection.collectionLogo}
                   alt=""
                 />
               </a>
@@ -218,7 +215,7 @@ function Minting({ collection }) {
 
             {/* Blockchain Icon */}
             <div className="blockchain-icon">
-              <img src={polygonLogo} alt="" />
+              <img src={collection.blockchainLogo} alt="" />
             </div>
           </div>
         )}
@@ -228,7 +225,7 @@ function Minting({ collection }) {
             <a href={collection?.collectionBaseUrl} target="blank">
               <img
                 className="card-img-top avatar-max-lg"
-                src={hiddenImg}
+                src={collection.collectionLogo}
                 alt=""
               />
             </a>
@@ -290,7 +287,7 @@ function Minting({ collection }) {
 
           {/* Blockchain Icon */}
           <div className="blockchain-icon">
-            <img src={polygonLogo} alt="" />
+            <img src={collection.blockchainLogo} alt="" />
           </div>
         </div>
       </div>
