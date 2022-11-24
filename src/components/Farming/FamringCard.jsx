@@ -11,6 +11,8 @@ export default function FarmingCard({ collection }) {
   const [stakingUserData, setStakingUserData] = useState();
   const [stakingCollectionData, setStakingCollectionData] = useState();
   const [stakeId, setStakeId] = useState();
+  const [unStakeId, setUnStakeId] = useState();
+  const [approved, setApproved] = useState();
 
   const NftContractAddress = collection.NftsAddress;
   const StakingContractAddress = collection.StakingAddress;
@@ -43,7 +45,7 @@ export default function FarmingCard({ collection }) {
   useEffect(() => {
     fetchCollectionData();
     fetchUserStakingUserData();
-    fetchCollectionStakingUserData();
+    fetchStakingCollectionData();
   }, []);
 
   async function fetchCollectionData() {
@@ -79,7 +81,7 @@ export default function FarmingCard({ collection }) {
     }
   }
 
-  async function fetchCollectionStakingUserData() {
+  async function fetchStakingCollectionData() {
     if (typeof window.ethereum !== "undefined") {
       let accounts = await window.ethereum.request({
         method: "eth_requestAccounts",
@@ -113,6 +115,13 @@ export default function FarmingCard({ collection }) {
 
         setStakingCollectionData(data);
         console.log(data);
+
+        const isApproved = await NFTContract.isApprovedForAll(
+          accounts[0],
+          StakingContract.address
+        );
+
+        setApproved(isApproved);
       } catch (err) {
         console.log(err.message);
       }
@@ -214,12 +223,90 @@ export default function FarmingCard({ collection }) {
         console.log("finished");
         fetchCollectionData();
         fetchUserStakingUserData();
-        fetchCollectionStakingUserData();
+        fetchStakingCollectionData();
       } catch (err) {
         console.log(err.message);
       }
     }
   }
+
+  async function unStake() {
+    if (typeof window.ethereum !== "undefined") {
+      let accounts = await window.ethereum.request({
+        method: "eth_requestAccounts",
+      });
+
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const signer = provider.getSigner();
+      const contract = new ethers.Contract(
+        StakingContractAddress,
+        StakingContractArtifact.abi,
+        signer
+      );
+      try {
+        const transaction = await contract.unstake(unStakeId);
+        console.log(transaction);
+        console.log("pending");
+        toast.promise(transaction.wait(), {
+          pending: "UnStaking in progress 🔗",
+          success: "NFT unStaked 👌",
+          error: "Transaction rejected 🤯",
+        });
+        await transaction.wait();
+        console.log("finished");
+        setUnStakeId("");
+        fetchCollectionData();
+        fetchUserStakingUserData();
+        fetchStakingCollectionData();
+      } catch (err) {
+        console.log(err.message);
+      }
+    }
+  }
+
+  async function setApprovalForAll() {
+    if (typeof window.ethereum !== "undefined") {
+      let accounts = await window.ethereum.request({
+        method: "eth_requestAccounts",
+      });
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const signer = provider.getSigner();
+      const StakingContract = new ethers.Contract(
+        StakingContractAddress,
+        StakingContractArtifact.abi,
+
+        signer
+      );
+      const NFTContract = new ethers.Contract(
+        NftContractAddress,
+        NFTcontractArtifact.abi,
+
+        signer
+      );
+      try {
+        const transaction = await NFTContract.setApprovalForAll(
+          StakingContract.address,
+          { from: accounts[0] }
+        );
+        console.log(transaction);
+        console.log("pending");
+        toast.promise(transaction.wait(), {
+          pending: "Approving in progress 🔗",
+          success: "Approved 👌",
+          error: "Transaction rejected 🤯",
+        });
+        await transaction.wait();
+        console.log("finished");
+        fetchStakingCollectionData();
+      } catch (err) {
+        console.log(err.message);
+      }
+    }
+  }
+
+  const handleUnStakeChange = (event) => {
+    setUnStakeId(event.target?.value);
+  };
 
   const handleStakeChange = (event) => {
     setStakeId(event.target?.value);
@@ -289,67 +376,91 @@ export default function FarmingCard({ collection }) {
       >
         {/* Card Body */}
         <div className="card-body">
-          <div className="row">
-            {/* Single Staking Item */}
-            <div className="col-12 col-md-4 single-staking-item input-box">
-              <span className="item-title mb-2">Stake</span>
-              <div className="input-area d-flex flex-column">
-                <select
-                  onChange={handleStakeChange}
-                  name="tokenId"
-                  id="tokenId-select"
-                >
-                  <option value="">--Please choose NFT--</option>
-                  {collectionData &&
-                    collectionData.map((token) => {
-                      return (
-                        <option key={token.tokenId} value={token.tokenId}>
-                          {token.name}
-                        </option>
-                      );
-                    })}
-                </select>
+          {approved && (
+            <div className="row">
+              {/* Single Staking Item */}
+              <div className="col-12 col-md-4 single-staking-item input-box">
+                <span className="item-title mb-2">Stake</span>
+                <div className="input-area d-flex flex-column">
+                  <select
+                    onChange={handleStakeChange}
+                    name="tokenId"
+                    id="tokenId-select"
+                  >
+                    <option value="">--Please choose NFT--</option>
+                    {collectionData &&
+                      collectionData.map((token) => {
+                        return (
+                          <option key={token.tokenId} value={token.tokenId}>
+                            {token.name}
+                          </option>
+                        );
+                      })}
+                  </select>
 
-                <button onClick={stake} className="btn input-btn mt-2">
-                  Stake
-                </button>
+                  <button onClick={stake} className="btn input-btn mt-2">
+                    Stake
+                  </button>
+                </div>
               </div>
-            </div>
-            {/* Single Staking Item */}
-            <div className="col-12 col-md-4 single-staking-item input-box">
-              <div className="input-area d-flex flex-column">
-                <span className="item-title mb-2">UnStake</span>
-                <select name="tokenId" id="tokenId-select">
-                  <option value="">--Please choose NFT--</option>
-                  {stakingUserData &&
-                    stakingUserData.map((token) => {
-                      return (
-                        <option key={token.tokenId} value={token.tokenId}>
-                          {token.name}
-                        </option>
-                      );
-                    })}
-                </select>
+              {/* Single Staking Item */}
+              <div className="col-12 col-md-4 single-staking-item input-box">
+                <div className="input-area d-flex flex-column">
+                  <span className="item-title mb-2">UnStake</span>
+                  <select
+                    onChange={handleUnStakeChange}
+                    name="tokenId"
+                    id="tokenId-select"
+                  >
+                    <option value="">--Please choose NFT--</option>
+                    {stakingUserData &&
+                      stakingUserData.map((token) => {
+                        return (
+                          <option key={token.tokenId} value={token.tokenId}>
+                            {token.name}
+                          </option>
+                        );
+                      })}
+                  </select>
 
-                <a href="#" className="btn input-btn mt-2">
-                  UnStake
-                </a>
+                  <button onClick={unStake} className="btn input-btn mt-2">
+                    UnStake
+                  </button>
+                </div>
+              </div>
+              {/* Single Staking Item */}
+              <div className="col-12 col-md-4 single-staking-item input-box">
+                <span className="item-title mb-2">{item.reward_title}</span>
+                <div className="input-area d-flex flex-column">
+                  <h4 className="price m-0">
+                    0.0 {stakingCollectionData?.rewardToken}
+                  </h4>
+                  <span className="reward my-2"></span>
+                  <a href="/login" className="btn input-btn mt-2">
+                    <i className="fa-solid fa-lock mr-1" /> {item.actionBtn}
+                  </a>
+                </div>
               </div>
             </div>
-            {/* Single Staking Item */}
-            <div className="col-12 col-md-4 single-staking-item input-box">
-              <span className="item-title mb-2">{item.reward_title}</span>
-              <div className="input-area d-flex flex-column">
-                <h4 className="price m-0">
-                  0.0 {stakingCollectionData?.rewardToken}
-                </h4>
-                <span className="reward my-2"></span>
-                <a href="/login" className="btn input-btn mt-2">
-                  <i className="fa-solid fa-lock mr-1" /> {item.actionBtn}
-                </a>
+          )}
+          {!approved && (
+            <div className="row">
+              {/* Single Staking Item */}
+              <div className="col-12 col-md-4 single-staking-item input-box">
+                <span className="item-title mb-2">
+                  Approve Staking Contract
+                </span>
+                <div className="input-area d-flex flex-column">
+                  <button
+                    onClick={setApprovalForAll}
+                    className="btn input-btn mt-2"
+                  >
+                    Approve
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
+          )}
         </div>
       </div>
       <ToastContainer />
