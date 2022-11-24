@@ -285,6 +285,47 @@ export default function FarmingCard({ collection }) {
     }
   }
 
+  async function claim() {
+    if (typeof window.ethereum !== "undefined") {
+      let accounts = await window.ethereum.request({
+        method: "eth_requestAccounts",
+      });
+
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const signer = provider.getSigner();
+      const StakingContract = new ethers.Contract(
+        StakingContractAddress,
+        StakingContractArtifact.abi,
+        signer
+      );
+      try {
+        const totalUserStaking = await StakingContract.getStakedTokens({
+          from: accounts[0],
+        });
+
+        const claiming = await Promise.all(
+          totalUserStaking.map(async function (item) {
+            await StakingContract.claim(item);
+          })
+        );
+
+        toast.promise(claiming, {
+          pending: "UnStaking in progress 🔗",
+          success: "NFT unStaked 👌",
+          error: "Transaction rejected 🤯",
+        });
+
+        claiming.wait();
+        console.log("toto");
+        fetchCollectionData();
+        fetchUserStakingUserData();
+        fetchStakingCollectionData();
+      } catch (err) {
+        console.log(err.message);
+      }
+    }
+  }
+
   async function setApprovalForAll() {
     if (typeof window.ethereum !== "undefined") {
       let accounts = await window.ethereum.request({
@@ -456,7 +497,7 @@ export default function FarmingCard({ collection }) {
                     {stakingCollectionData?.rewardToken}
                   </h4>
                   <span className="reward my-2"></span>
-                  <button className="btn input-btn mt-2">
+                  <button onClick={claim} className="btn input-btn mt-2">
                     <i className="" /> Claim
                   </button>
                 </div>
