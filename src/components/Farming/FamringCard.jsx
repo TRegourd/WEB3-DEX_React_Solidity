@@ -4,11 +4,14 @@ import axios from "axios";
 import NFTcontractArtifact from "../../artifacts/contracts/myAwesomeNFT.sol/MyAwesomeNFT.json";
 import StakingContractArtifact from "../../artifacts/contracts/Staking.sol/NFTStaking.json";
 import RewardContractArtifact from "../../artifacts/contracts/RewardToken.sol/RewardToken.json";
+import { toast, ToastContainer } from "react-toastify";
 
 export default function FarmingCard({ collection }) {
   const [collectionData, setCollectionData] = useState();
   const [stakingUserData, setStakingUserData] = useState();
   const [stakingCollectionData, setStakingCollectionData] = useState();
+  const [stakeId, setStakeId] = useState();
+
   const NftContractAddress = collection.NftsAddress;
   const StakingContractAddress = collection.StakingAddress;
   const RewardContractAddress = collection.RewardsAddress;
@@ -181,10 +184,52 @@ export default function FarmingCard({ collection }) {
     };
     return tokenData;
   }
+
+  async function stake() {
+    if (typeof window.ethereum !== "undefined") {
+      let accounts = await window.ethereum.request({
+        method: "eth_requestAccounts",
+      });
+
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const signer = provider.getSigner();
+      const contract = new ethers.Contract(
+        StakingContractAddress,
+        StakingContractArtifact.abi,
+        signer
+      );
+      try {
+        let overrides = {
+          from: accounts[0],
+        };
+        const transaction = await contract.stake(stakeId, overrides);
+        console.log(transaction);
+        console.log("pending");
+        toast.promise(transaction.wait(), {
+          pending: "Staking in progress 🔗",
+          success: "NFT Staked 👌",
+          error: "Transaction rejected 🤯",
+        });
+        await transaction.wait();
+        console.log("finished");
+        fetchCollectionData();
+        fetchUserStakingUserData();
+        fetchCollectionStakingUserData();
+      } catch (err) {
+        console.log(err.message);
+      }
+    }
+  }
+
+  const handleStakeChange = (event) => {
+    setStakeId(event.target?.value);
+  };
+
   console.log(collectionData);
   return (
     <div key={`fard_${collection.id}`} className="single-accordion-item">
       {/* Card Header */}
+      {/* <pre>{JSON.stringify(stakeId, null, 2)}</pre> */}
       <div className="card-header bg-inherit border-0 p-0">
         <h2 className="m-0">
           <button
@@ -202,9 +247,11 @@ export default function FarmingCard({ collection }) {
                     alt=""
                   />
                   <div className="content media-body mt-4 mt-md-0 ml-md-4">
-                    <h4 className="m-0">{item.title_1}</h4>
-                    <span className="d-inline-block mt-2">{item.category}</span>
-                    <p>{item.content}</p>
+                    <h4 className="m-0">{collection.name}</h4>
+                    <span className="d-inline-block mt-2">
+                      {collection.symbol}
+                    </span>
+                    <p>{collection.description}</p>
                   </div>
                 </div>
               </div>
@@ -247,7 +294,11 @@ export default function FarmingCard({ collection }) {
             <div className="col-12 col-md-4 single-staking-item input-box">
               <span className="item-title mb-2">Stake</span>
               <div className="input-area d-flex flex-column">
-                <select name="tokenId" id="tokenId-select">
+                <select
+                  onChange={handleStakeChange}
+                  name="tokenId"
+                  id="tokenId-select"
+                >
                   <option value="">--Please choose NFT--</option>
                   {collectionData &&
                     collectionData.map((token) => {
@@ -259,9 +310,9 @@ export default function FarmingCard({ collection }) {
                     })}
                 </select>
 
-                <a href="#" className="btn input-btn mt-2">
+                <button onClick={stake} className="btn input-btn mt-2">
                   Stake
-                </a>
+                </button>
               </div>
             </div>
             {/* Single Staking Item */}
@@ -301,6 +352,7 @@ export default function FarmingCard({ collection }) {
           </div>
         </div>
       </div>
+      <ToastContainer />
     </div>
   );
 }

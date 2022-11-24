@@ -3,6 +3,7 @@
     "id": 1,
     "slug": "CryptoCats",
     "name": "Crypto Cats",
+    "symbol": "CATS",
     "category": "Game",
     "description": "Discover the CryptoCats",
     "NftsAddress": "0xBDd993ed4B9665BCF0BB476f3B8A3fCCCcA6c930",
