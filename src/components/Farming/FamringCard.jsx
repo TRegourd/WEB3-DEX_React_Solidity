@@ -107,10 +107,12 @@ export default function FarmingCard({ collection }) {
       try {
         const totalContractStaking = await StakingContract.totalStaking();
         const rewardToken = await RewardContract.symbol();
+        const rewardBalance = await RewardContract.balanceOf(accounts[0]);
 
         const data = {
           totalContractStaking: parseInt(totalContractStaking._hex, 16),
           rewardToken: rewardToken,
+          rewardBalance: parseInt(rewardBalance._hex, 16),
         };
 
         setStakingCollectionData(data);
@@ -358,8 +360,8 @@ export default function FarmingCard({ collection }) {
               </div>
 
               <div className="col single-item">
-                <span>{item.price}</span>
-                <span>LP Price</span>
+                <span>{stakingCollectionData?.rewardBalance}</span>
+                <span>Reward Balance</span>
               </div>
               <div className="col single-item">
                 <span>{stakingCollectionData?.totalContractStaking}</span>
