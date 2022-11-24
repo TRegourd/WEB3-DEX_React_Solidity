@@ -54,23 +54,34 @@ export default function FarmingCard({ collection }) {
         method: "eth_requestAccounts",
       });
       const provider = new ethers.providers.Web3Provider(window.ethereum);
-      const contract = new ethers.Contract(
+      const StakingContract = new ethers.Contract(
+        StakingContractAddress,
+        StakingContractArtifact.abi,
+        provider
+      );
+      const NFTContract = new ethers.Contract(
         NftContractAddress,
         NFTcontractArtifact.abi,
         provider
       );
 
+      const RewardContract = new ethers.Contract(
+        RewardContractAddress,
+        RewardContractArtifact.abi,
+        provider
+      );
+
       try {
-        const userBalance = await contract.balanceOf(accounts[0]);
+        const userBalance = await NFTContract.balanceOf(accounts[0]);
 
         let userItems = [];
         for (let i = 0; i < userBalance; i++) {
-          userItems[i] = await contract.tokenOfOwnerByIndex(accounts[0], i);
+          userItems[i] = await NFTContract.tokenOfOwnerByIndex(accounts[0], i);
         }
 
         const items = await Promise.all(
           userItems.map(async function (item) {
-            return await fetchItem(contract, item);
+            return await fetchItem(NFTContract, item);
           })
         );
 
@@ -156,9 +167,26 @@ export default function FarmingCard({ collection }) {
             return await fetchItem(NFTContract, item);
           })
         );
+        let pendingRewards = 0;
+        try {
+          await Promise.all(
+            totalUserStaking.map(async function (item) {
+              console.log(item);
+              const itemReward = await StakingContract.getPendingRewards(item, {
+                from: accounts[0],
+              });
+              console.log(parseInt(itemReward._hex, 16));
+              pendingRewards += Number(itemReward);
+            })
+          );
+        } catch (err) {
+          console.log(err);
+        }
 
-        setStakingUserData(items);
-      } catch (err) {}
+        setStakingUserData({ items: items, pendingRewards: pendingRewards });
+      } catch (err) {
+        console.log(err);
+      }
     }
   }
 
@@ -340,7 +368,7 @@ export default function FarmingCard({ collection }) {
                 <span>Available</span>
               </div>
               <div className="col single-item">
-                <span>{stakingUserData?.length}</span>
+                <span>{stakingUserData?.items.length}</span>
                 <span>Stacked</span>
               </div>
               <div className="col single-item">
@@ -404,8 +432,8 @@ export default function FarmingCard({ collection }) {
                     id="tokenId-select"
                   >
                     <option value="">--Please choose NFT--</option>
-                    {stakingUserData &&
-                      stakingUserData.map((token) => {
+                    {stakingUserData?.items &&
+                      stakingUserData.items.map((token) => {
                         return (
                           <option key={token.tokenId} value={token.tokenId}>
                             {token.name}
@@ -424,7 +452,8 @@ export default function FarmingCard({ collection }) {
                 <span className="item-title mb-2">{item.reward_title}</span>
                 <div className="input-area d-flex flex-column">
                   <h4 className="price m-0">
-                    0.0 {stakingCollectionData?.rewardToken}
+                    {stakingUserData?.pendingRewards}{" "}
+                    {stakingCollectionData?.rewardToken}
                   </h4>
                   <span className="reward my-2"></span>
                   <button className="btn input-btn mt-2">
