@@ -12,8 +12,6 @@ interface IOracle {
 contract DEX is Ownable {
     mapping(string => IOracle) public oracles;
     mapping(string => address) public tokens;
-    address public token1;
-    address public token2;
 
     function setOracle(string memory _symbol, IOracle _oracle)
         public
@@ -63,6 +61,8 @@ contract DEX is Ownable {
 
         uint256 fromPrice = oracles[_from].getPrice();
         uint256 toPrice = oracles[_to].getPrice();
+
+        // FIXME : Find a way to calculate swapRatio when ratio is a float number.
 
         uint256 swapAmount = (fromPrice / toPrice) * _amount;
 
