@@ -3,11 +3,12 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import CollectionCard from "../Collection/CollectionCard";
 import { ethers } from "ethers";
-import contractArtifact from "../../artifacts/contracts/myAwesomeNFT_whitelist.sol/MyAwesomeNFT_witheList.json";
 import { useLocation } from "react-router";
+import artifacts from "../../artifacts";
 
 function Collection({ collection }) {
   const contractAddress = collection.NftsAddress;
+  const contractArtifact = artifacts[collection?.NftsContract];
 
   const [data, setData] = useState();
 

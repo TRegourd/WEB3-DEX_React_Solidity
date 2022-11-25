@@ -2,8 +2,6 @@ import React, { useContext } from "react";
 import { useState, useEffect } from "react";
 import { ethers } from "ethers";
 
-import contractArtifact from "../../artifacts/contracts/myAwesomeNFT_whitelist.sol/MyAwesomeNFT_witheList.json";
-
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useLocation } from "react-router";
@@ -12,12 +10,14 @@ import whiteList from "../../data/whiteList.json";
 import MerkleTree from "merkletreejs";
 import { keccak256 } from "ethers/lib/utils";
 import { AuthContext } from "../../AuthProvider";
+import artifacts from "../../artifacts";
 
 function Minting({ collection }) {
   const { currentAccount } = useContext(AuthContext);
 
   const [data, setData] = useState({});
   const contractAddress = collection.NftsAddress;
+  const contractArtifact = artifacts[collection?.NftsContract];
 
   let addressList = [];
   whiteList.map((entry) => {

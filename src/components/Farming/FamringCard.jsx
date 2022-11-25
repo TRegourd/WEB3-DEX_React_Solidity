@@ -1,10 +1,8 @@
 import { useEffect, useState } from "react";
 import { ethers } from "ethers";
 import axios from "axios";
-import NFTcontractArtifact from "../../artifacts/contracts/myAwesomeNFT_whitelist.sol/MyAwesomeNFT_witheList.json";
-import StakingContractArtifact from "../../artifacts/contracts/Staking.sol/NFTStaking.json";
-import RewardContractArtifact from "../../artifacts/contracts/RewardToken.sol/RewardToken.json";
 import { toast, ToastContainer } from "react-toastify";
+import artifacts from "../../artifacts";
 
 export default function FarmingCard({ collection }) {
   const [collectionData, setCollectionData] = useState();
@@ -17,6 +15,10 @@ export default function FarmingCard({ collection }) {
   const NftContractAddress = collection.NftsAddress;
   const StakingContractAddress = collection.StakingAddress;
   const RewardContractAddress = collection.RewardsAddress;
+
+  const NFTcontractArtifact = artifacts[collection?.NftsContract];
+  const StakingContractArtifact = artifacts[collection?.StakingContract];
+  const RewardContractArtifact = artifacts[collection?.RewardsContract];
 
   const item = {
     id: 3,
@@ -46,6 +48,7 @@ export default function FarmingCard({ collection }) {
     fetchCollectionData();
     fetchUserStakingUserData();
     fetchStakingCollectionData();
+    // importArtifacts();
   }, []);
 
   async function fetchCollectionData() {
