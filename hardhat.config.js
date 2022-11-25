@@ -25,5 +25,4 @@ module.exports = {
     currency: "EUR",
     gasPrice: 21,
   },
-  paths: { artifacts: "./src/artifacts" },
 };

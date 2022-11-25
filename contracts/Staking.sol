@@ -77,6 +77,8 @@ contract NFTStaking is Ownable, IERC721Receiver {
         _claim(_tokenID);
     }
 
+    function claimAll() public {}
+
     function unstake(uint256 _tokenID) public onlyStakerOf(_tokenID) {
         _claim(_tokenID);
         _unStake(_tokenID);

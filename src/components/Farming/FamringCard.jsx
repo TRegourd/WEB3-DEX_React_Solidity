@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { ethers } from "ethers";
 import axios from "axios";
-import NFTcontractArtifact from "../../artifacts/contracts/myAwesomeNFT.sol/MyAwesomeNFT.json";
+import NFTcontractArtifact from "../../artifacts/contracts/myAwesomeNFT_whitelist.sol/MyAwesomeNFT_witheList.json";
 import StakingContractArtifact from "../../artifacts/contracts/Staking.sol/NFTStaking.json";
 import RewardContractArtifact from "../../artifacts/contracts/RewardToken.sol/RewardToken.json";
 import { toast, ToastContainer } from "react-toastify";

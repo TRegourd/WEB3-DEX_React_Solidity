@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import CollectionCard from "../Collection/CollectionCard";
 import { ethers } from "ethers";
-import contractArtifact from "../../artifacts/contracts/myAwesomeNFT.sol/MyAwesomeNFT.json";
+import contractArtifact from "../../artifacts/contracts/myAwesomeNFT_whitelist.sol/MyAwesomeNFT_witheList.json";
 import { useLocation } from "react-router";
 
 function Collection({ collection }) {
