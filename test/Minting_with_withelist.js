@@ -3,6 +3,7 @@ const { expect } = require("chai");
 const { MerkleTree } = require("merkletreejs");
 const keccak256 = require("keccak256");
 const whiteList = require("../scripts/whiteList.json");
+const { ethers } = require("hardhat");
 
 describe("White List Minting", function () {
   // We define a fixture to reuse the same setup in every test.

@@ -3,15 +3,16 @@ pragma solidity ^0.8.0;
 
 // Permet d'ajouter directement les smarts contract d'openZeppelin, fonctionne avec d'autre contracts dans vos nodemodules,
 // ou des contract dans votre dossier
-import "./myAwesomeNFT.sol";
+import "./myAwesomeNFT_whitelist.sol";
 import "./RewardToken.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 import "@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol";
+import "hardhat/console.sol";
 
 contract NFTStaking is Ownable, IERC721Receiver {
     RewardToken token;
-    MyAwesomeNFT nft;
+    MyAwesomeNFT_witheList nft;
 
     constructor() {}
 
@@ -19,7 +20,7 @@ contract NFTStaking is Ownable, IERC721Receiver {
         token = _token;
     }
 
-    function setNft(MyAwesomeNFT _nft) public onlyOwner {
+    function setNft(MyAwesomeNFT_witheList _nft) public onlyOwner {
         nft = _nft;
     }
 
@@ -77,7 +78,12 @@ contract NFTStaking is Ownable, IERC721Receiver {
         _claim(_tokenID);
     }
 
-    function claimAll() public {}
+    function claimAll() public {
+        uint256[] memory stakedTokens = getStakedTokens();
+        for (uint256 i = 0; i < stakedTokens.length; i++) {
+            _claim(stakedTokens[i]);
+        }
+    }
 
     function unstake(uint256 _tokenID) public onlyStakerOf(_tokenID) {
         _claim(_tokenID);

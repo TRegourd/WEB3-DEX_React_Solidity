@@ -1,5 +1,6 @@
 const { loadFixture } = require("@nomicfoundation/hardhat-network-helpers");
 const { expect } = require("chai");
+const { ethers } = require("hardhat");
 
 describe("MyAwesomeNFT", function () {
   // We define a fixture to reuse the same setup in every test.
@@ -119,7 +120,7 @@ describe("MyAwesomeNFT", function () {
         deployment
       );
 
-      provider = ethers.provider;
+      let provider = ethers.provider;
       await deployedContract
         .connect(otherAccount)
         .multipleMint(5, { value: ethers.utils.parseEther("0.005") });

@@ -1,5 +1,6 @@
 const { loadFixture } = require("@nomicfoundation/hardhat-network-helpers");
 const { expect } = require("chai");
+const { ethers } = require("hardhat");
 const address0 = "0x0000000000000000000000000000000000000000";
 
 describe("NFT Staking", function () {
@@ -68,6 +69,32 @@ describe("NFT Staking", function () {
       expect(reward).to.equal(20);
       const stakedNft1 = await staking.nftsStaked(1);
       expect(stakedNft1.owner).to.equal(account1.address);
+    });
+
+    it("Should get all rewards without unstaking", async function () {
+      const { nft, rewardToken, staking, owner, account1, account2 } =
+        await loadFixture(deployment);
+
+      // Mint and stake
+      await nft
+        .connect(account1)
+        .multipleMint(2, { value: ethers.utils.parseEther("0.002") });
+
+      await nft.connect(account1).setApprovalForAll(staking.address, true);
+      await staking.connect(account1).stake(1);
+      await staking.connect(account1).stake(2);
+
+      // Wait for reward
+      await timeout(2000);
+
+      // Get reward without unstaking
+      await staking.connect(account1).claimAll();
+      const reward = await rewardToken.balanceOf(account1.address);
+      expect(reward).to.equal(50);
+      const stakedNft1 = await staking.nftsStaked(1);
+      const stakedNft2 = await staking.nftsStaked(1);
+      expect(stakedNft1.owner).to.equal(account1.address);
+      expect(stakedNft2.owner).to.equal(account1.address);
     });
 
     it("Should get rewards and unstake", async function () {

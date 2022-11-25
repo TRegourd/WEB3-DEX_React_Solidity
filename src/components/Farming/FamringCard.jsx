@@ -171,11 +171,10 @@ export default function FarmingCard({ collection }) {
         try {
           await Promise.all(
             totalUserStaking.map(async function (item) {
-              console.log(item);
               const itemReward = await StakingContract.getPendingRewards(item, {
                 from: accounts[0],
               });
-              console.log(parseInt(itemReward._hex, 16));
+
               pendingRewards += Number(itemReward);
             })
           );
@@ -299,24 +298,16 @@ export default function FarmingCard({ collection }) {
         signer
       );
       try {
-        const totalUserStaking = await StakingContract.getStakedTokens({
-          from: accounts[0],
-        });
+        const transaction = await StakingContract.claimAll();
 
-        const claiming = await Promise.all(
-          totalUserStaking.map(async function (item) {
-            await StakingContract.claim(item);
-          })
-        );
-
-        toast.promise(claiming, {
-          pending: "UnStaking in progress 🔗",
-          success: "NFT unStaked 👌",
+        toast.promise(transaction.wait(), {
+          pending: "Claiming in progress 🔗",
+          success: "Rewards Claimed 👌",
           error: "Transaction rejected 🤯",
         });
 
-        claiming.wait();
-        console.log("toto");
+        await transaction.wait();
+
         fetchCollectionData();
         fetchUserStakingUserData();
         fetchStakingCollectionData();

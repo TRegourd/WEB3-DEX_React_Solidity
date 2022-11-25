@@ -10,6 +10,8 @@ const leaves = addressList.map((address) => keccak256(address));
 const tree = new MerkleTree(leaves, keccak256, { sort: true });
 const root = tree.getHexRoot();
 
+console.log("Root is" + root.toString());
+
 addressList.map((address) => {
   const leafHash = keccak256(address);
   const proof = tree.getHexProof(leafHash);
