@@ -54,7 +54,7 @@ function Header() {
               </ul>
             </li>
             <li className="nav-item">
-              <a href="/" className="nav-link">
+              <a href="/swapping" className="nav-link">
                 Swap
               </a>
             </li>
@@ -77,7 +77,7 @@ function Header() {
             </li>
           </ul>
           {/* Navbar Icons */}
-          <ul className="navbar-nav icons">
+          {/* <ul className="navbar-nav icons">
             <li className="nav-item">
               <a
                 href="#"
@@ -88,7 +88,7 @@ function Header() {
                 <i className="icon-magnifier" />
               </a>
             </li>
-          </ul>
+          </ul> */}
           {/* Navbar Toggler */}
           <ul className="navbar-nav toggle">
             <li className="nav-item">

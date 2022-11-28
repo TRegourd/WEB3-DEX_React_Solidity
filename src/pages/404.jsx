@@ -2,24 +2,17 @@ import React from "react";
 
 import Header from "../components/Header/Header";
 import Breadcrumb from "../components/Breadcrumb/Breadcrumb";
-import Farm from "../components/Farming/Farming";
+import Staking from "../components/Staking/StakingOne";
 import Cta from "../components/Cta/Cta";
 import Footer from "../components/Footer/Footer";
 import ModalSearch from "../components/Modal/ModalSearch";
 import ModalMenu from "../components/Modal/ModalMenu";
-import Collections from "../data/collections.json";
 
-export default function Farming() {
-  const farmableCollections = Collections?.filter((collection) => {
-    return collection?.farmable === true;
-  });
-
+export default function NotFound() {
   return (
     <div className="main">
       <Header />
-      <Breadcrumb title="Farming" subpage="" page="Farming" />
-      <Farm collections={farmableCollections} />
-      <Cta />
+      <Breadcrumb title="Page Not Found" subpage="" page="Not Found" />
       <Footer />
       <ModalSearch />
       <ModalMenu />

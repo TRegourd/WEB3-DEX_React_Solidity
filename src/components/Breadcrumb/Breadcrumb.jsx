@@ -13,9 +13,11 @@ function Breadcrumb({ title, subpage, page }) {
                 <li className="breadcrumb-item">
                   <a href="/">Home</a>
                 </li>
-                <li className="breadcrumb-item">
-                  <a href="#">{subpage}</a>
-                </li>
+                {subpage && (
+                  <li className="breadcrumb-item">
+                    <a href={`/${subpage}`}>{subpage}</a>
+                  </li>
+                )}
                 <li className="breadcrumb-item active">{page}</li>
               </ol>
             </div>

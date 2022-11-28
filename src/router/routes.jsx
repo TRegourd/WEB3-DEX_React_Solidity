@@ -9,6 +9,8 @@ import CollectionPage from "../pages/CollectionPage";
 import Farming from "../pages/farming";
 
 import Collections from "../data/collections.json";
+import Swapping from "../pages/swapping";
+import NotFound from "../pages/404";
 
 function Router() {
   return (
@@ -17,6 +19,7 @@ function Router() {
         <Routes>
           <Route exact path="/" element={<Home />} />
           <Route exact path="/farming" element={<Farming />} />
+          <Route exact path="/swapping" element={<Swapping />} />
           {Collections &&
             Collections.map((collection) => {
               return (
@@ -28,6 +31,7 @@ function Router() {
                 />
               );
             })}
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
     </div>
