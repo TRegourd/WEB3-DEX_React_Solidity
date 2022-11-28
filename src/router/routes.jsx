@@ -18,13 +18,12 @@ function Router() {
       <BrowserRouter>
         <Routes>
           <Route exact path="/" element={<Home />} />
-          <Route exact path="/farming" element={<Farming />} />
-          <Route exact path="/swapping" element={<Swapping />} />
+          <Route path="/farming" element={<Farming />} />
+          <Route path="/swapping" element={<Swapping />} />
           {Collections &&
             Collections.map((collection) => {
               return (
                 <Route
-                  exact
                   key={collection.slug}
                   path={`/${collection.slug}`}
                   element={<CollectionPage collection={collection} />}
