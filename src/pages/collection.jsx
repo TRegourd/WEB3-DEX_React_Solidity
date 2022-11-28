@@ -1,12 +1,12 @@
 import React from "react";
 
-import Header from "../activeComponents/Header/Header";
-import Breadcrumb from "../activeComponents/Breadcrumb/Breadcrumb";
-import CollectionList from "../activeComponents/Collection/CollectionList";
-import Cta from "../activeComponents/Cta/Cta";
-import Footer from "../activeComponents/Footer/Footer";
-import ModalMenu from "../activeComponents/Modal/ModalMenu";
-import Minting from "../activeComponents/Minting/Minting";
+import Header from "../components/Header/Header";
+import Breadcrumb from "../components/Breadcrumb/Breadcrumb";
+import CollectionList from "../components/Collection/CollectionList";
+import Cta from "../components/Cta/Cta";
+import Footer from "../components/Footer/Footer";
+import ModalMenu from "../components/Modal/ModalMenu";
+import Minting from "../components/Minting/Minting";
 
 function CollectionPage({ collection }) {
   return (

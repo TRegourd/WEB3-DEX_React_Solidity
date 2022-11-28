@@ -28,7 +28,6 @@ coverage
 coverage.json
 typechain
 
-src/components
 
 #Hardhat files
 cache
