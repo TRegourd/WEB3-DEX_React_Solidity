@@ -11,6 +11,7 @@ import Farming from "../pages/farming";
 import Collections from "../data/collections.json";
 import Swapping from "../pages/swapping";
 import NotFound from "../pages/404";
+import HelpPage from "../pages/helpPage";
 
 function Router() {
   return (
@@ -30,6 +31,7 @@ function Router() {
                 />
               );
             })}
+          <Route path="/help" element={<HelpPage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

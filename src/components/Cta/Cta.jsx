@@ -4,8 +4,8 @@ const data = {
   img: "/img/cta_thumb.png",
   title: "How It Works",
   content: "Setup your wallet to interact with Ridge DEX",
-  btn: "Learn More",
-  btnIcon: "icon-rocket mr-2",
+  btn: "Help Center",
+  btnIcon: "icon-info mr-2",
 };
 
 export default function Cta() {
@@ -21,13 +21,16 @@ export default function Cta() {
               <div className="col-12 col-md-6 mt-4 mt-md-0">
                 <h2 className="m-0">{data.title}</h2>
                 <p>{data.content}</p>
-                <a className="btn btn-bordered active d-inline-block" href="/">
+                <a
+                  className="btn btn-bordered active d-inline-block"
+                  href="/help"
+                >
                   <i className={data.btnIcon} />
                   {data.btn}
                 </a>
               </div>
             </div>
-            <a className="cta-link" href="/" />
+            <a className="cta-link" href="/help" />
           </div>
         </div>
       </div>
