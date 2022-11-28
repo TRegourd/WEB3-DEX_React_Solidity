@@ -17,7 +17,7 @@ function Router() {
     <div>
       <BrowserRouter>
         <Routes>
-          <Route exact path="/" element={<Home />} />
+          <Route path="/" element={<Home />} />
           <Route path="/farming" element={<Farming />} />
           <Route path="/swapping" element={<Swapping />} />
           {Collections &&
