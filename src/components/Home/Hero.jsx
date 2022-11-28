@@ -1,20 +1,12 @@
 import React from "react";
-import { useEffect } from "react";
-import { useState } from "react";
 
 const data = {
-  sub_heading: "GameOn",
-  heading: "The Next Generation Web 3.0 IGO Launchpad",
-  content: "Full-scale Blockchain Gaming Ecosystem for IGOs & NFT Pre-Sales",
+  sub_heading: "Ridge Exchange",
+  heading: "The Next Gen Decentralized Exchange",
+  content: "Web 3.0 platform for NFT and DEFI",
 };
 
 function Hero() {
-  const [initData, setInitData] = useState({});
-
-  useEffect(() => {
-    setInitData(data);
-  });
-
   return (
     <section className="hero-section">
       <div className="container">
@@ -23,23 +15,23 @@ function Hero() {
             {/* Hero Content */}
             <div className="hero-content">
               <div className="intro text-center mb-5">
-                <span className="intro-text">{initData.sub_heading}</span>
-                <h1 className="mt-4">{initData.heading}</h1>
-                <p>{initData.content}</p>
+                <span className="intro-text">{data.sub_heading}</span>
+                <h1 className="mt-4">{data.heading}</h1>
+                <p>{data.content}</p>
               </div>
               {/* Buttons */}
               <div className="button-group">
                 <a
                   className="btn btn-bordered active smooth-anchor"
-                  href="#explore"
+                  href="#about"
                 >
                   <i className="icon-rocket mr-2" />
-                  Explore IGOs
+                  Learn More
                 </a>
-                <a className="btn btn-bordered-white" href="/apply">
+                {/* <a className="btn btn-bordered-white" href="/apply">
                   <i className="icon-note mr-2" />
                   Apply Now
-                </a>
+                </a> */}
               </div>
             </div>
           </div>

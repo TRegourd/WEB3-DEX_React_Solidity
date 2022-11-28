@@ -1,15 +1,11 @@
-import React, { Component } from "react";
+import React from "react";
 
 import Header from "../components/Header/Header";
-import Hero from "../components/Hero/Hero";
-import Project from "../components/Project/ProjectOne";
-import ProjectTwo from "../components/Project/ProjectTwo";
-import Content from "../components/Content/Content";
-import Team from "../components/Team/Team";
-import Work from "../components/Work/Work";
+import Hero from "../components/Home/Hero";
+import About from "../components/Home/About";
+import HowTo from "../components/Home/HowTo";
 import Cta from "../components/Cta/Cta";
 import Footer from "../components/Footer/Footer";
-import ModalSearch from "../components/Modal/ModalSearch";
 import ModalMenu from "../components/Modal/ModalMenu";
 
 function Home() {
@@ -17,14 +13,10 @@ function Home() {
     <div className="main">
       <Header />
       <Hero />
-      <Project />
-      <ProjectTwo />
-      <Content />
-      <Team />
-      <Work />
+      <About />
+      <HowTo />
       <Cta />
       <Footer />
-      <ModalSearch />
       <ModalMenu />
     </div>
   );

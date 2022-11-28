@@ -5,7 +5,6 @@ import Breadcrumb from "../components/Breadcrumb/Breadcrumb";
 import Farm from "../components/Farming/Farming";
 import Cta from "../components/Cta/Cta";
 import Footer from "../components/Footer/Footer";
-import ModalSearch from "../components/Modal/ModalSearch";
 import ModalMenu from "../components/Modal/ModalMenu";
 import Collections from "../data/collections.json";
 
@@ -21,7 +20,6 @@ export default function Farming() {
       <Farm collections={farmableCollections} />
       <Cta />
       <Footer />
-      <ModalSearch />
       <ModalMenu />
     </div>
   );

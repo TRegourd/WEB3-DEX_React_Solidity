@@ -5,7 +5,6 @@ import Breadcrumb from "../components/Breadcrumb/Breadcrumb";
 import CollectionList from "../components/Project/CollectionList";
 import Cta from "../components/Cta/Cta";
 import Footer from "../components/Footer/Footer";
-import ModalSearch from "../components/Modal/ModalSearch";
 import ModalMenu from "../components/Modal/ModalMenu";
 import Minting from "../components/Minting/Minting";
 
@@ -24,7 +23,6 @@ function CollectionPage({ collection }) {
       </section>
       <Cta />
       <Footer />
-      <ModalSearch />
       <ModalMenu />
     </div>
   );
