@@ -1,11 +1,11 @@
 import React from "react";
 
-import Header from "../components/Header/Header";
-import Breadcrumb from "../components/Breadcrumb/Breadcrumb";
-import Farm from "../components/Farming/Farming";
-import Cta from "../components/Cta/Cta";
-import Footer from "../components/Footer/Footer";
-import ModalMenu from "../components/Modal/ModalMenu";
+import Header from "../activeComponents/Header/Header";
+import Breadcrumb from "../activeComponents/Breadcrumb/Breadcrumb";
+import Farm from "../activeComponents/Farming/Farming";
+import Cta from "../activeComponents/Cta/Cta";
+import Footer from "../activeComponents/Footer/Footer";
+import ModalMenu from "../activeComponents/Modal/ModalMenu";
 import Collections from "../data/collections.json";
 
 export default function Farming() {

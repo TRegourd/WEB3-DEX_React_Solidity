@@ -1,12 +1,12 @@
 import React from "react";
 
-import Header from "../components/Header/Header";
-import Hero from "../components/Home/Hero";
-import About from "../components/Home/About";
-import HowTo from "../components/Home/HowTo";
-import Cta from "../components/Cta/Cta";
-import Footer from "../components/Footer/Footer";
-import ModalMenu from "../components/Modal/ModalMenu";
+import Header from "../activeComponents/Header/Header";
+import Hero from "../activeComponents/Home/Hero";
+import About from "../activeComponents/Home/About";
+import HowTo from "../activeComponents/Home/HowTo";
+import Cta from "../activeComponents/Cta/Cta";
+import Footer from "../activeComponents/Footer/Footer";
+import ModalMenu from "../activeComponents/Modal/ModalMenu";
 
 function Home() {
   return (

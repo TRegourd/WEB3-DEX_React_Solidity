@@ -1,9 +1,9 @@
 import React from "react";
 
-import Header from "../components/Header/Header";
-import Breadcrumb from "../components/Breadcrumb/Breadcrumb";
-import Footer from "../components/Footer/Footer";
-import ModalMenu from "../components/Modal/ModalMenu";
+import Header from "../activeComponents/Header/Header";
+import Breadcrumb from "../activeComponents/Breadcrumb/Breadcrumb";
+import Footer from "../activeComponents/Footer/Footer";
+import ModalMenu from "../activeComponents/Modal/ModalMenu";
 
 export default function NotFound() {
   return (

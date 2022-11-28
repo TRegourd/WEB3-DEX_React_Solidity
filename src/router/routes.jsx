@@ -4,10 +4,8 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 // importing all the themes
 import Home from "../pages/home";
 
-import CollectionPage from "../pages/CollectionPage";
-
+import CollectionPage from "../pages/collection";
 import Farming from "../pages/farming";
-
 import Collections from "../data/collections.json";
 import Swapping from "../pages/swapping";
 import NotFound from "../pages/404";

@@ -1,18 +1,17 @@
 import React from "react";
-
-import Header from "../components/Header/Header";
-import Breadcrumb from "../components/Breadcrumb/Breadcrumb";
-import Staking from "../components/Staking/StakingOne";
-import Cta from "../components/Cta/Cta";
-import Footer from "../components/Footer/Footer";
-import ModalMenu from "../components/Modal/ModalMenu";
+import Header from "../activeComponents/Header/Header";
+import Breadcrumb from "../activeComponents/Breadcrumb/Breadcrumb";
+import Cta from "../activeComponents/Cta/Cta";
+import Footer from "../activeComponents/Footer/Footer";
+import ModalMenu from "../activeComponents/Modal/ModalMenu";
+import SwappingPage from "../activeComponents/Swapping/SwappingPage";
 
 export default function Swapping() {
   return (
     <div className="main">
       <Header />
       <Breadcrumb title="Swapping" subpage="" page="Swapping" />
-      <Staking />
+      <SwappingPage />
       <Cta />
       <Footer />
       <ModalMenu />
