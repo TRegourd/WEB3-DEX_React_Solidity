@@ -1,7 +1,7 @@
 # Ridge Swap
 
-Ridge DEX is a platform to demonstrate Web 3.0 features like NFT minting & staking, liquidity swapping and more...
+RidgeSwap DEX is a platform to demonstrate Web 3.0 features like NFT minting & staking, liquidity swapping and more...
 
-<a href = "www.ridgeswap.com">
+<a href="https://www.ridgeswap.com" target="_blank">
 Visit Ridge Swap
 </a>
