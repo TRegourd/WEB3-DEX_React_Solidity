@@ -1,13 +1,7 @@
-# Sample Hardhat Project
+# Ridge Swap
 
-This project demonstrates a basic Hardhat use case. It comes with a sample contract, a test for that contract, and a script that deploys that contract.
+Ridge DEX is a platform to demonstrate Web 3.0 features like NFT minting & staking, liquidity swapping and more...
 
-Try running some of the following tasks:
-
-```shell
-npx hardhat help
-npx hardhat test
-REPORT_GAS=true npx hardhat test
-npx hardhat node
-npx hardhat run scripts/deploy.js
-```
+<a href = "www.ridgeswap.com">
+Visit Ridge Swap
+</a>
