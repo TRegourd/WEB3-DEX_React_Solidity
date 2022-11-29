@@ -36,6 +36,9 @@ function Minting({ collection }) {
 
   async function fetchData() {
     if (typeof window.ethereum !== "undefined") {
+      let accounts = await window.ethereum.request({
+        method: "eth_requestAccounts",
+      });
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       const contract = new ethers.Contract(
         contractAddress,
@@ -47,27 +50,16 @@ function Minting({ collection }) {
         const price = await contract.tokenPrice();
         const mintedSupply = await contract.totalSupply();
         const maxSupply = await contract.maxSupply();
-        if (currentAccount) {
-          const alreadyClaimed = await contract.claimedWhiteListNFTs(
-            currentAccount
-          );
-          console.log(alreadyClaimed);
-          const object = {
-            price: String(price),
-            mintedSupply: String(mintedSupply),
-            maxSupply: String(maxSupply),
-            alreadyClaimed: alreadyClaimed,
-          };
-          setData(object);
-        } else {
-          const object = {
-            price: String(price),
-            mintedSupply: String(mintedSupply),
-            maxSupply: String(maxSupply),
-          };
 
-          setData(object);
-        }
+        const alreadyClaimed = await contract.claimedWhiteListNFTs(accounts[0]);
+
+        const object = {
+          price: String(price),
+          mintedSupply: String(mintedSupply),
+          maxSupply: String(maxSupply),
+          alreadyClaimed: alreadyClaimed,
+        };
+        setData(object);
       } catch (err) {
         console.log(err.message);
       }
