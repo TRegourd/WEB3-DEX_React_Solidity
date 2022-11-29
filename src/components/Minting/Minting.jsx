@@ -51,6 +51,7 @@ function Minting({ collection }) {
           const alreadyClaimed = await contract.claimedWhiteListNFTs(
             currentAccount
           );
+          console.log(alreadyClaimed);
           const object = {
             price: String(price),
             mintedSupply: String(mintedSupply),

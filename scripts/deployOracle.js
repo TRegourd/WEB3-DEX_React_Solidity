@@ -1,10 +1,4 @@
-// Pour tous les scripts que vous voudrez faire, reprenner le base de ces fichiers et changer le contenu de main
-// ou rajouter vos fonctions autours
-
-// Pour lancer
-// npx hardhar run script/deployNft.js
-// ou
-// npx hardhar run script/deployNft.js --network mumbai
+const { ethers } = require("hardhat");
 
 async function main() {
   const [deployer] = await ethers.getSigners();
