@@ -40,8 +40,8 @@ const data = {
     },
     {
       id: 5,
-      text: "Privacy Policy",
-      link: "/blog",
+      text: "Terms & Credits",
+      link: "/legals",
     },
   ],
 };

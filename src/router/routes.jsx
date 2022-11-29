@@ -10,6 +10,7 @@ import Collections from "../data/collections.json";
 import Swapping from "../pages/swapping";
 import NotFound from "../pages/404";
 import HelpPage from "../pages/helpPage";
+import LegalPage from "../pages/legals";
 
 function Router() {
   return (
@@ -30,6 +31,7 @@ function Router() {
               );
             })}
           <Route path="/help" element={<HelpPage />} />
+          <Route path="/legals" element={<LegalPage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
