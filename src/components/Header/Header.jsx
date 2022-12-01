@@ -63,11 +63,11 @@ function Header() {
                 Earn <i className="icon-arrow-down" />
               </a>
               <ul className="dropdown-menu">
-                <li className="nav-item">
+                {/* <li className="nav-item">
                   <a href="/project-one" className="nav-link">
                     Staking
                   </a>
-                </li>
+                </li> */}
                 <li className="nav-item">
                   <a href="/farming" className="nav-link">
                     NFT Farming

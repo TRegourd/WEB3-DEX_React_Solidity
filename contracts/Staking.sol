@@ -8,9 +8,10 @@ import "./RewardToken.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 import "@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol";
+import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import "hardhat/console.sol";
 
-contract NFTStaking is Ownable, IERC721Receiver {
+contract NFTStaking is Ownable, IERC721Receiver, ReentrancyGuard {
     RewardToken token;
     MyAwesomeNFT_witheList nft;
 
@@ -61,7 +62,7 @@ contract NFTStaking is Ownable, IERC721Receiver {
         return bytes4(IERC721Receiver.onERC721Received.selector);
     }
 
-    function stake(uint256 _tokenID) public onlyOwnerOf(_tokenID) {
+    function stake(uint256 _tokenID) public nonReentrant onlyOwnerOf(_tokenID) {
         require(nftsStaked[_tokenID].stakingTime == 0, "Already staked");
         Staking memory newStaking = Staking(
             _tokenID,
@@ -85,24 +86,32 @@ contract NFTStaking is Ownable, IERC721Receiver {
         }
     }
 
-    function unstake(uint256 _tokenID) public onlyStakerOf(_tokenID) {
+    function unstake(uint256 _tokenID) public {
         _claim(_tokenID);
         _unStake(_tokenID);
     }
 
-    function _unStake(uint256 _tokenID) internal onlyStakerOf(_tokenID) {
-        delete nftsStaked[_tokenID];
-        totalStaking--;
-        emit UnStaked(_tokenID, block.timestamp, msg.sender);
-        nft.transferFrom(address(this), msg.sender, _tokenID);
-    }
-
-    function _claim(uint256 _tokenID) internal onlyStakerOf(_tokenID) {
+    function _claim(uint256 _tokenID)
+        internal
+        nonReentrant
+        onlyStakerOf(_tokenID)
+    {
         uint256 pendingRewards = ((block.timestamp -
             nftsStaked[_tokenID].stakingTime) * rewardTime) / 1 seconds;
         require(pendingRewards > 0, "Nothing to claim");
         nftsStaked[_tokenID].stakingTime = block.timestamp;
         token.mint(msg.sender, pendingRewards);
+    }
+
+    function _unStake(uint256 _tokenID)
+        internal
+        nonReentrant
+        onlyStakerOf(_tokenID)
+    {
+        delete nftsStaked[_tokenID];
+        totalStaking--;
+        emit UnStaked(_tokenID, block.timestamp, msg.sender);
+        nft.transferFrom(address(this), msg.sender, _tokenID);
     }
 
     function getPendingRewards(uint256 _tokenID)

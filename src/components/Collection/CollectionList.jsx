@@ -61,6 +61,7 @@ function Collection({ collection }) {
       parseInt(item._hex, 16);
 
     const blockchainLogo = collection.blockchainLogo;
+    const symbol = collection.symbol;
 
     const tokenUri = await contract.tokenURI(item._hex);
     const HttpTokenUri = tokenUri.replace("ipfs://", "https://ipfs.io/ipfs/");
@@ -74,6 +75,7 @@ function Collection({ collection }) {
       link: link,
       image: HttpTokenImage,
       blockchainLogo: blockchainLogo,
+      symbol: symbol,
     };
     return tokenData;
   }

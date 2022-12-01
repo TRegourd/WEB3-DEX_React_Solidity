@@ -167,7 +167,7 @@ function Minting({ collection }) {
                   <h4 className="m-0">Free Mint</h4>
                 </a>
                 <div className="countdown-times">
-                  <h6 className="my-2">Get your free CryptoCat</h6>
+                  <h6 className="my-2">Get your free NFT</h6>
                 </div>
               </div>
             </div>
@@ -189,7 +189,7 @@ function Minting({ collection }) {
                   </div>
                 </div>
                 <div className="progress-sale d-flex justify-content-between mt-3">
-                  <span>1 CAT Free for whithelisted accounts</span>
+                  <span>1 NFT Free for whithelisted accounts</span>
                 </div>
               </div>
             </div>
@@ -224,7 +224,7 @@ function Minting({ collection }) {
                 <h4 className="m-0">Mint</h4>
               </a>
               <div className="countdown-times">
-                <h6 className="my-2">Get your CryptoCat</h6>
+                <h6 className="my-2">Get your NFT</h6>
               </div>
             </div>
           </div>

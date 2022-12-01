@@ -1,8 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-// Permet d'ajouter directement les smarts contract d'openZeppelin, fonctionne avec d'autre contracts dans vos nodemodules,
-// ou des contract dans votre dossier
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 import "@openzeppelin/contracts/utils/cryptography/MerkleProof.sol";
@@ -10,8 +8,6 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/security/Pausable.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
-
-import "hardhat/console.sol";
 
 contract MyAwesomeNFT_witheList is
     ERC721URIStorage,
@@ -29,14 +25,13 @@ contract MyAwesomeNFT_witheList is
 
     bytes32 private root;
 
-    string private uri_default = "www.google.com";
+    string private uri_default = "https://testnets.opensea.io/fr";
     string private uri_base = "";
 
     uint256 public tokenPrice = 0.001 ether;
-    uint256 public maxSupply = 10;
+    uint256 public maxSupply = 100;
 
     constructor(bytes32 _merkleroot) ERC721("CryptoCats", "CATS") {
-        uri_base = "ipfs://QmTNStQBms8hKEULsJsHGGQq4Vy7HUh8cs6zxQZMUNLorY/";
         root = _merkleroot;
     }
 

@@ -36,6 +36,9 @@ async function main() {
   await token.setStakingContract(staking.address);
   await staking.setRewardToken(token.address);
   await staking.setNft(nft.address);
+  await nft.setBaseUri(
+    "ipfs://bafybeielqf5utkmcytbic3tltia2mypwluhlbsn5yzmfvttsi6q7k4gzd4/"
+  );
 }
 
 main()

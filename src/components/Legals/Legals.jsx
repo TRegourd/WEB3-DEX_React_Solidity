@@ -14,6 +14,16 @@ const data = [
         text: "Shubham Dhage",
         link: "https://unsplash.com/@theshubhamdhage?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText",
       },
+      {
+        name: "CryptoCats Collection",
+        text: "Gentfy",
+        link: "https://www.genfty.com/",
+      },
+      {
+        name: "Hash Eyes Collection",
+        text: "HashLips Art Engine",
+        link: "https://hashlips.online/HashLips",
+      },
     ],
   },
   {
