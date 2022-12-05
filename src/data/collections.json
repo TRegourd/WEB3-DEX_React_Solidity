@@ -19,6 +19,7 @@
     "collectionLogo": "/img/hidden.jpeg",
     "blockchainLogo": "/img/polygon-matic-logo.png"
   },
+
   {
     "id": 2,
     "slug": "HashEyes",
@@ -27,14 +28,14 @@
     "category": "Collection",
     "description": "Discover the HashEyes from HashLips",
     "Metadata": "bafybeigfasdbjxa3dazcge2br2sggezfsefh47d2dhpfeytvptbz2azb3m",
-    "NftsAddress": "0xED6A818C0FA056f34cc1C72E88fdE8B04850Ec3B",
-    "StakingAddress": "0x8f289a474324a8980c5957dFFbEa6da64cf66ff6",
-    "RewardsAddress": "0x6B8063F7894082a603f8BE5b37a8c2ff0435Aa33",
+    "NftsAddress": "0x1e1c4AeeF2e7aa5A1Ac66996bD70cFe41e55aFCE",
+    "StakingAddress": "0xDDB036471448DDe855c08DFb0B6F8CB207F28aed",
+    "RewardsAddress": "0x1c54306bAb1c273C118110eDD42804bE6B0Dc974",
     "NftsContract": "MyAwesomeNFT_witheList",
     "StakingContract": "Staking",
     "RewardsContract": "RewardToken",
     "openSeaBaseUrl": "https://testnets.opensea.io/fr/assets/mumbai/",
-    "collectionBaseUrl": "https://testnets.opensea.io/fr/collection/hash-eyes-v4",
+    "collectionBaseUrl": "https://testnets.opensea.io/fr/collection/hash-eyes-23ufe0k6mj",
     "farmable": true,
     "collectionLogo": "/img/hasheyes_hidden.png",
     "blockchainLogo": "/img/polygon-matic-logo.png"

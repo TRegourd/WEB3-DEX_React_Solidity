@@ -1,15 +1,20 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.7;
 
-import "../node_modules/@openzeppelin/contracts/token/ERC20/ERC20.sol";
-import "../node_modules/@openzeppelin/contracts/access/Ownable.sol";
-import "../node_modules/hardhat/console.sol";
+import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
+import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol";
+import "hardhat/console.sol";
 
 interface IOracle {
     function getPrice() external view returns (uint256);
 }
 
-contract DEX is Ownable {
+contract DEX is Ownable, ReentrancyGuard {
+    event Deposited(address indexed payer, uint256 weiAmount);
+    event Withdrawn(address indexed payee, uint256 weiAmount);
+
     mapping(string => IOracle) public oracles;
     mapping(string => address) public tokens;
 
@@ -33,6 +38,7 @@ contract DEX is Ownable {
     function addLiquidity(string memory _symbol, uint256 _amount)
         public
         onlyOwner
+        nonReentrant
     {
         bool liquidityAdded = IERC20(tokens[_symbol]).transferFrom(
             msg.sender,
@@ -46,7 +52,7 @@ contract DEX is Ownable {
         string memory _from,
         string memory _to,
         uint256 _amount
-    ) public {
+    ) public nonReentrant {
         address from = tokens[_from];
         address to = tokens[_to];
         require(from != address(0x0) && to != address(0x0), "Invalid tokens");
@@ -78,5 +84,47 @@ contract DEX is Ownable {
             swapAmount
         );
         require(transferToDex && transferToUser && approveDex);
+    }
+
+    function change(string memory _from, uint256 _amount) public nonReentrant {
+        address from = tokens[_from];
+
+        require(from != address(0x0), "Invalid token");
+        require(address(this).balance >= _amount, "Insuficient Dex Liquidity");
+        require(
+            IERC20(from).balanceOf(msg.sender) >= _amount,
+            "Insuficient Swaper Balance"
+        );
+
+        uint256 fromPrice = oracles[_from].getPrice();
+
+        uint256 changeAmount = (fromPrice) * _amount;
+
+        ERC20Burnable(from).burnFrom(msg.sender, _amount);
+
+        bool transferToUser = payable(msg.sender).send(changeAmount);
+
+        require(transferToUser);
+    }
+
+    function deposit() public payable onlyOwner nonReentrant {
+        emit Deposited(msg.sender, msg.value);
+    }
+
+    function withdraw() public onlyOwner nonReentrant {
+        uint256 balance = address(this).balance;
+        payable(msg.sender).transfer(balance);
+        emit Withdrawn(msg.sender, balance);
+    }
+
+    function getBalance(string memory _symbol) public view returns (uint256) {
+        if (
+            keccak256(abi.encodePacked(_symbol)) ==
+            keccak256(abi.encodePacked("MATIC"))
+        ) {
+            return address(this).balance;
+        } else {
+            return IERC20(tokens[_symbol]).balanceOf(address(this));
+        }
     }
 }

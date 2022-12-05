@@ -16,8 +16,8 @@ describe("DEFI Deployment", function () {
 
     const token1 = await Token1.deploy();
     const token2 = await Token2.deploy();
-    const oracle1 = await Oracle.deploy();
-    const oracle2 = await Oracle.deploy();
+    const oracle1 = await Oracle.deploy(ethers.utils.parseEther("0.1"));
+    const oracle2 = await Oracle.deploy(ethers.utils.parseEther("0.1"));
     const dex = await DEX.deploy();
 
     return { token1, token2, oracle1, oracle2, dex, owner, otherAccount };
@@ -175,117 +175,39 @@ describe("DEFI Deployment", function () {
         Number(dexBalanceToken2BeforeSwap) - 1 * swapRatio
       );
     });
-    it("Should Swap 10 TKN1 to 1 TKN2", async function () {
-      const { token1, token2, oracle1, oracle2, dex, owner, otherAccount } =
-        await loadFixture(deployment);
-
-      // Setting tokens price
-      await oracle1
-        .connect(owner)
-        .updatePrice(ethers.utils.parseEther("0.001"));
-      await oracle2
-        .connect(owner)
-        .updatePrice(ethers.utils.parseEther("0.0001"));
+    it("Should Change 1 TKN1 to 0.1 MATIC and burn TKN1", async function () {
+      const { token1, oracle1, dex, owner } = await loadFixture(deployment);
 
       // Connecting Contracts together
       await dex.connect(owner).setOracle("TKN1", oracle1.address);
-      await dex.connect(owner).setOracle("TKN2", oracle2.address);
       await dex.connect(owner).setToken("TKN1", token1.address);
-      await dex.connect(owner).setToken("TKN2", token2.address);
 
-      // Minting Tokens for OtherAccount
-      await token1.connect(owner).mint(otherAccount.address, 100);
-      await token2.connect(owner).mint(otherAccount.address, 100);
-
-      // Approving DEX from owner to spend Token1 & Token 2 and Provinding Liquidity to DEX
+      await dex.deposit({ value: ethers.utils.parseEther("1") });
       await token1.connect(owner).approve(dex.address, 100);
-      await token2.connect(owner).approve(dex.address, 100);
-      const ownerBalanceToken1BeforeLiquidityProviding = await token1.balanceOf(
-        owner.address
-      );
-      await dex.connect(owner).addLiquidity("TKN1", 100);
-      const ownerBalanceToken1AfterLiquidityProviding = await token1.balanceOf(
-        owner.address
+
+      const totalSupplyBefore = await token1.totalSupply();
+
+      await dex.change("TKN1", 1);
+
+      expect(Number(await token1.totalSupply())).to.equal(
+        Number(totalSupplyBefore) - 1
       );
 
-      // Verifiying owner balance after providing liquidity to DEX
-      expect(ownerBalanceToken1AfterLiquidityProviding).to.equal(
-        ownerBalanceToken1BeforeLiquidityProviding - 100
-      );
-      await dex.connect(owner).addLiquidity("TKN2", 100);
-
-      // Approving DEX from otheraccount to spend Token2
-      await token2.connect(otherAccount).approve(dex.address, 10);
-
-      // Balances before Swap
-      const otherAccountBalanceToken1BeforeSwap = await token1.balanceOf(
-        otherAccount.address
-      );
-      const dexBalanceToken1BeforeSwap = await token1.balanceOf(dex.address);
-      const otherAccountBalanceToken2BeforeSwap = await token2.balanceOf(
-        otherAccount.address
-      );
-      const dexBalanceToken2BeforeSwap = await token2.balanceOf(dex.address);
-
-      // Swapping tokens
-      await dex.connect(otherAccount).swap("TKN2", "TKN1", 10);
-
-      // Balances after Swap
-      const otherAccountBalanceToken1AfterSwap = await token1.balanceOf(
-        otherAccount.address
-      );
-      const dexBalanceToken1AfterSwap = await token1.balanceOf(dex.address);
-      const otherAccountBalanceToken2AfterSwap = await token2.balanceOf(
-        otherAccount.address
-      );
-      const dexBalanceToken2AfterSwap = await token2.balanceOf(dex.address);
-
-      // Verifiying otherAccount and dex balances after swapping
-      const priceTKN1 = await oracle1.getPrice();
-      const priceTKN2 = await oracle2.getPrice();
-
-      const swapRatio = priceTKN2 / priceTKN1;
-      console.log("Swap Ratio : ", swapRatio);
-
-      console.log(
-        "Token1 DEX balances : before " +
-          dexBalanceToken1BeforeSwap +
-          ", after " +
-          dexBalanceToken1AfterSwap
-      );
-      console.log(
-        "Token1 OtherAccount balances : before " +
-          otherAccountBalanceToken1BeforeSwap +
-          ", after " +
-          otherAccountBalanceToken1AfterSwap
-      );
-      console.log(
-        "Token2 DEX balances : before " +
-          dexBalanceToken2BeforeSwap +
-          ", after " +
-          dexBalanceToken2AfterSwap
-      );
-      console.log(
-        "Token2 OtherAccount balances : before " +
-          otherAccountBalanceToken2BeforeSwap +
-          ", after " +
-          otherAccountBalanceToken2AfterSwap
+      expect(await dex.change("TKN1", 1)).to.changeEtherBalance(
+        owner.address,
+        ethers.utils.parseEther("0.1")
       );
 
-      // FIXME : Find a way to calculate swapRatio when ratio is a float number.
+      expect(await dex.getBalance("MATIC")).to.changeEtherBalance(
+        dex,
+        ethers.utils.parseEther("0.1")
+      );
 
-      // expect(otherAccountBalanceToken1AfterSwap).to.equal(
-      //   Number(otherAccountBalanceToken1BeforeSwap) + 10 * swapRatio
-      // );
-      // expect(otherAccountBalanceToken2AfterSwap).to.equal(
-      //   Number(otherAccountBalanceToken2BeforeSwap) - 10
-      // );
-      // expect(dexBalanceToken1AfterSwap).to.equal(
-      //   Number(dexBalanceToken1BeforeSwap) - 10 * swapRatio
-      // );
-      // expect(dexBalanceToken2AfterSwap).to.equal(
-      //   Number(dexBalanceToken2BeforeSwap) + 10 * swapRatio
-      // );
+      expect(await token1.balanceOf(owner.address)).to.changeTokenBalance(
+        token1,
+        owner,
+        -1
+      );
     });
   });
 });

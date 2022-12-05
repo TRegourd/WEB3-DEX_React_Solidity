@@ -2,15 +2,15 @@ const { ethers } = require("hardhat");
 
 async function main() {
   const tokens = [
-    {
-      symbol: "rCATS",
-      price: "1",
-      address: "0x7C99Ee575CdA71dB0cd379Ca672719fF453205b8",
-    },
+    // {
+    //   symbol: "rCATS",
+    //   price: "0.001",
+    //   address: "0x7C99Ee575CdA71dB0cd379Ca672719fF453205b8",
+    // },
     {
       symbol: "rEYES",
-      price: "1",
-      address: "0x6B8063F7894082a603f8BE5b37a8c2ff0435Aa33",
+      price: "0.001",
+      address: "0x1c54306bAb1c273C118110eDD42804bE6B0Dc974",
     },
   ];
 
@@ -24,6 +24,8 @@ async function main() {
   const DEX = await ethers.getContractFactory("DEX");
   const dex = await DEX.deploy();
 
+  await dex.deposit({ value: ethers.utils.parseEther("0.1") });
+
   console.log("Dex address: ", dex.address);
 
   await Promise.all(
@@ -32,7 +34,6 @@ async function main() {
       console.log(oracle.address);
       await dex.setToken(token.symbol, token.address);
       await dex.setOracle(token.symbol, oracle.address);
-
       console.log(`Oracle of ${token.symbol} is ${oracle}`);
     })
   );
