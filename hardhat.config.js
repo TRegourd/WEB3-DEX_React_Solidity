@@ -11,6 +11,7 @@ module.exports = {
     mumbai: {
       url: `https://polygon-mumbai.g.alchemy.com/v2/${DEV_ALCHEMY_API_KEY}`,
       accounts: [`${DEV_PRIVATE_KEY}`],
+      //gasPrice: 50000000000
     },
   },
   gasReporter: {

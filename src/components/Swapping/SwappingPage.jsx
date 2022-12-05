@@ -16,7 +16,7 @@ export default function SwappingPage() {
 
   useEffect(() => {
     setTokenFrom({ symbol: "TKN1", liquidity: 10000 });
-    setTokenTo({ symbol: "TKN2", liquidity: 100000 });
+    setTokenTo({ symbol: "MATIC", liquidity: 100000 });
   }, []);
 
   function invertTokens() {

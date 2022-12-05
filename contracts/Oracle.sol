@@ -7,8 +7,11 @@ import "../node_modules/hardhat/console.sol";
 
 contract MyOracle is Ownable {
     event priceUpdated(uint256 newPrice);
+    uint256 public tokenPrice;
 
-    uint256 tokenPrice = 0.001 ether;
+    constructor(uint256 _price) {
+        tokenPrice = _price;
+    }
 
     function updatePrice(uint256 _newPrice) public onlyOwner {
         tokenPrice = _newPrice;
