@@ -46,7 +46,7 @@ export default function MintingCard({ collection, data, mint }) {
               aria-valuemin={0}
               aria-valuemax={100}
             >
-              {(data.mintedSupply / data.maxSupply) * 100}%
+              {((data.mintedSupply / data.maxSupply) * 100).toFixed(0)}%
             </div>
           </div>
           <div className="progress-sale d-flex justify-content-between mt-3">
