@@ -8,7 +8,9 @@ import "hardhat/console.sol";
 contract RewardToken is ERC20, Ownable {
     address stakingContract;
 
-    constructor() ERC20("Reward Token", "RWDTKN") {}
+    constructor(string memory _name, string memory _symbol)
+        ERC20(_name, _symbol)
+    {}
 
     function setStakingContract(address _stakingContract) public onlyOwner {
         stakingContract = _stakingContract;

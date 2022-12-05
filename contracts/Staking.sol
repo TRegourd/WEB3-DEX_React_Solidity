@@ -97,7 +97,9 @@ contract NFTStaking is Ownable, IERC721Receiver, ReentrancyGuard {
         onlyStakerOf(_tokenID)
     {
         uint256 pendingRewards = ((block.timestamp -
-            nftsStaked[_tokenID].stakingTime) * rewardTime) / 1 seconds;
+            nftsStaked[_tokenID].stakingTime) *
+            rewardTime *
+            1 gwei) / 1 seconds;
         require(pendingRewards > 0, "Nothing to claim");
         nftsStaked[_tokenID].stakingTime = block.timestamp;
         token.mint(msg.sender, pendingRewards);

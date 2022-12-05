@@ -31,7 +31,11 @@ contract MyAwesomeNFT_witheList is
     uint256 public tokenPrice = 0.001 ether;
     uint256 public maxSupply = 100;
 
-    constructor(bytes32 _merkleroot) ERC721("CryptoCats", "CATS") {
+    constructor(
+        bytes32 _merkleroot,
+        string memory _name,
+        string memory _symbol
+    ) ERC721(_name, _symbol) {
         root = _merkleroot;
     }
 

@@ -20,15 +20,15 @@ async function main() {
 
   // Je deploi le contract
   const NFT = await ethers.getContractFactory("MyAwesomeNFT_witheList");
-  const nft = await NFT.deploy(root);
+  const nft = await NFT.deploy(root, "Hash Eyes", "EYES");
 
   const Token = await ethers.getContractFactory("RewardToken");
-  const token = await Token.deploy();
+  const token = await Token.deploy("EYES Reward", "rEYES");
 
   const Staking = await ethers.getContractFactory("NFTStaking");
   const staking = await Staking.deploy();
 
-  // Je peux interagir avec
+  // // Je peux interagir avec
   console.log("NFT Contract address:", nft.address);
   console.log("Token Contract address:", token.address);
   console.log("Staking Contract address:", staking.address);
@@ -37,7 +37,7 @@ async function main() {
   await staking.setRewardToken(token.address);
   await staking.setNft(nft.address);
   await nft.setBaseUri(
-    "ipfs://bafybeielqf5utkmcytbic3tltia2mypwluhlbsn5yzmfvttsi6q7k4gzd4/"
+    "ipfs://bafybeigfasdbjxa3dazcge2br2sggezfsefh47d2dhpfeytvptbz2azb3m/"
   );
 }
 

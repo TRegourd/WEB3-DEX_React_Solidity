@@ -23,14 +23,14 @@ describe("White List Minting", function () {
     const tree = new MerkleTree(leaves, keccak256, { sort: true });
     const root = tree.getHexRoot();
 
+    // Get the contract
     const MyAwesomeNFT = await ethers.getContractFactory(
       "MyAwesomeNFT_witheList"
     );
+    // Deploy the contract
     const deployedContract = await MyAwesomeNFT.deploy(root);
 
-    const tokenPrice = 0.001;
-    const maxSupply = 10;
-
+    // Set BaseURI for tokens
     await deployedContract.setBaseUri(
       "ipfs://QmNv3Cxqo3dibpXcp7PdJZWg6gGGRdh1W33uN7Nv1JTqp2/"
     );
@@ -42,13 +42,11 @@ describe("White List Minting", function () {
       notApprovedAccount,
       otherAccount,
       tree,
-      tokenPrice,
-      maxSupply,
     };
   }
 
-  describe("Deployment", function () {
-    it("Mint one NFT", async function () {
+  describe("Test Sequence", function () {
+    it("Should Mint one NFT", async function () {
       const { deployedContract, owner, otherAccount } = await loadFixture(
         deployment
       );
@@ -72,6 +70,18 @@ describe("White List Minting", function () {
       );
     });
 
+    it("Should Fail if not enough money sent", async function () {
+      const { deployedContract, owner, otherAccount } = await loadFixture(
+        deployment
+      );
+
+      await expect(
+        deployedContract
+          .connect(otherAccount)
+          .unitMint({ value: ethers.utils.parseEther("0.0001") })
+      ).to.be.revertedWith("Not enough money sent");
+    });
+
     it("Mint multiple NFT", async function () {
       const { deployedContract, owner, otherAccount } = await loadFixture(
         deployment
@@ -88,18 +98,6 @@ describe("White List Minting", function () {
 
       expect(balanceBeforeMint).to.equal(0);
       expect(balanceAfterMint).to.equal(5);
-    });
-
-    it("Should Fail if not enough money sent", async function () {
-      const { deployedContract, owner, otherAccount } = await loadFixture(
-        deployment
-      );
-
-      await expect(
-        deployedContract
-          .connect(otherAccount)
-          .unitMint({ value: ethers.utils.parseEther("0.0001") })
-      ).to.be.revertedWith("Not enough money sent");
     });
 
     it("Should Fail if not enough token remaining", async function () {

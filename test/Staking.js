@@ -66,7 +66,7 @@ describe("NFT Staking", function () {
       // Get reward without unstaking
       await staking.connect(account1).claim(1);
       const reward = await rewardToken.balanceOf(account1.address);
-      expect(reward).to.equal(20);
+      expect(reward).to.equal(20 * ethers.utils.parseUnits("1", "gwei"));
       const stakedNft1 = await staking.nftsStaked(1);
       expect(stakedNft1.owner).to.equal(account1.address);
     });
@@ -90,7 +90,7 @@ describe("NFT Staking", function () {
       // Get reward without unstaking
       await staking.connect(account1).claimAll();
       const reward = await rewardToken.balanceOf(account1.address);
-      expect(reward).to.equal(50);
+      expect(reward).to.equal(50 * ethers.utils.parseUnits("1", "gwei"));
       const stakedNft1 = await staking.nftsStaked(1);
       const stakedNft2 = await staking.nftsStaked(1);
       expect(stakedNft1.owner).to.equal(account1.address);
@@ -114,7 +114,7 @@ describe("NFT Staking", function () {
       // Get reward while unstaking
       await staking.connect(account1).unstake(1);
       const reward = await rewardToken.balanceOf(account1.address);
-      expect(reward).to.equal(20);
+      expect(reward).to.equal(20 * ethers.utils.parseUnits("1", "gwei"));
       const stakedNft1 = await staking.nftsStaked(1);
       expect(stakedNft1.owner).to.equal(address0);
     });

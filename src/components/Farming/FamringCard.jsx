@@ -20,30 +20,6 @@ export default function FarmingCard({ collection }) {
   const StakingContractArtifact = artifacts[collection?.StakingContract];
   const RewardContractArtifact = artifacts[collection?.RewardsContract];
 
-  const item = {
-    id: 3,
-    img: "/img/thumb_3.png",
-    img_1: "/img/thumb_6.png",
-    title: "Participate IGO Stake",
-    title_1: "Farming Stake",
-    category: "Game",
-    content:
-      "Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC making it over.",
-    staked: "0 LP",
-    earned: "0.00 Game",
-    apy: "25%",
-    price: "$9,524,07.19",
-    value: "$24571,957.94",
-    input_title_1: "Deposit",
-    input_title_2: "Withdraw",
-    input_btn_1: "Approve",
-    input_btn_2: "Withdraw",
-    reward_title: "Pending rewards",
-    reward: "0.00 BUSD",
-    reward_content: "Rewards are depleted, ask admins to fund it.",
-    actionBtn: "Claim",
-  };
-
   useEffect(() => {
     fetchCollectionData();
     fetchUserStakingUserData();
@@ -57,20 +33,10 @@ export default function FarmingCard({ collection }) {
         method: "eth_requestAccounts",
       });
       const provider = new ethers.providers.Web3Provider(window.ethereum);
-      const StakingContract = new ethers.Contract(
-        StakingContractAddress,
-        StakingContractArtifact.abi,
-        provider
-      );
+
       const NFTContract = new ethers.Contract(
         NftContractAddress,
         NFTcontractArtifact.abi,
-        provider
-      );
-
-      const RewardContract = new ethers.Contract(
-        RewardContractAddress,
-        RewardContractArtifact.abi,
         provider
       );
 
@@ -126,7 +92,9 @@ export default function FarmingCard({ collection }) {
         const data = {
           totalContractStaking: parseInt(totalContractStaking._hex, 16),
           rewardToken: rewardToken,
-          rewardBalance: parseInt(rewardBalance._hex, 16),
+          rewardBalance: (
+            parseInt(rewardBalance._hex, 16) / ethers.utils.parseEther("1")
+          ).toFixed(8),
         };
 
         setStakingCollectionData(data);
@@ -178,7 +146,8 @@ export default function FarmingCard({ collection }) {
                 from: accounts[0],
               });
 
-              pendingRewards += Number(itemReward);
+              pendingRewards +=
+                Number(itemReward) / ethers.utils.parseUnits("1", "gwei");
             })
           );
         } catch (err) {
@@ -484,7 +453,7 @@ export default function FarmingCard({ collection }) {
               </div>
               {/* Single Staking Item */}
               <div className="col-12 col-md-4 single-staking-item input-box">
-                <span className="item-title mb-2">{item.reward_title}</span>
+                <span className="item-title mb-2">Pending Rewards</span>
                 <div className="input-area d-flex flex-column">
                   <h4 className="price m-0">
                     {stakingUserData?.pendingRewards}{" "}
