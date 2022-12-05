@@ -2507,6 +2507,7 @@ header .navbar-sticky {
   padding: 0.8rem 1rem;
   background-color: #2c2f4c;
   color: var(--white-color);
+  cursor: pointer;
 }
 
 .staking-area .input-btn {
