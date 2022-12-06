@@ -3,15 +3,7 @@ import React, { useEffect } from "react";
 import { useState } from "react";
 import tokens from "../../data/dex.json";
 import artifacts from "../../artifacts";
-
-const data = {
-  heading: "Swap Tokens",
-  balance: "256.50 BUSD",
-  content: "",
-  note: "",
-  input_btn_1: "Approve",
-  input_btn_2: "Withdraw",
-};
+import { toast, ToastContainer } from "react-toastify";
 
 export default function SwappingPage() {
   const [tokenFrom, setTokenFrom] = useState();
@@ -52,12 +44,22 @@ export default function SwappingPage() {
         provider
       );
 
+      const oracleContractArtifact = artifacts["MyOracle"];
+      const oracleContractAddress = await DEXContract.oracles(symbol);
+
+      const OracleContract = new ethers.Contract(
+        oracleContractAddress,
+        oracleContractArtifact.abi,
+        provider
+      );
+
       try {
         const allowance = parseInt(
           await TokenContract.allowance(accounts[0], DEXContractAddress),
           16
         );
         const userBalance = await TokenContract.balanceOf(accounts[0]);
+        const tokenPrice = await OracleContract.getPrice();
 
         setApproved(allowance === 0 ? false : true);
         setTokenFrom({
@@ -66,6 +68,7 @@ export default function SwappingPage() {
             parseInt(userBalance._hex, 16) /
             ethers.utils.parseUnits("1", "ether")
           ).toFixed(8),
+          price: parseInt(tokenPrice?._hex, 16),
         });
       } catch (err) {
         console.log(err.message);
@@ -98,12 +101,23 @@ export default function SwappingPage() {
           provider
         );
 
+        const oracleContractArtifact = artifacts["MyOracle"];
+        const oracleContractAddress = await DEXContract.oracles(symbol);
+
+        const OracleContract = new ethers.Contract(
+          oracleContractAddress,
+          oracleContractArtifact.abi,
+          provider
+        );
+
         try {
           const allowance = parseInt(
             await TokenContract.allowance(accounts[0], DEXContractAddress),
             16
           );
           const userBalance = await TokenContract.balanceOf(accounts[0]);
+
+          const tokenPrice = await OracleContract.getPrice();
 
           setApproved(allowance === 0 ? false : true);
           setTokenTo({
@@ -112,6 +126,7 @@ export default function SwappingPage() {
               parseInt(userBalance._hex, 16) /
               ethers.utils.parseUnits("1", "ether")
             ).toFixed(8),
+            price: parseInt(tokenPrice?._hex, 16),
           });
         } catch (err) {
           console.log(err.message);
@@ -127,10 +142,93 @@ export default function SwappingPage() {
               parseInt(userBalance._hex, 16) /
               ethers.utils.parseUnits("1", "ether")
             ).toFixed(8),
+            price: parseInt(ethers.utils.parseUnits("1", "ether")._hex, 16),
           });
         } catch (err) {
           console.log(err.message);
         }
+      }
+    }
+  }
+
+  async function approve() {
+    if (typeof window.ethereum !== "undefined") {
+      let accounts = await window.ethereum.request({
+        method: "eth_requestAccounts",
+      });
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const signer = provider.getSigner();
+
+      const tokenContractArtifact = artifacts["RewardToken"];
+      const tokenContractAddress = tokens?.find((token) => {
+        return token.symbol === tokenFrom?.symbol;
+      })?.address;
+
+      const TokenContract = new ethers.Contract(
+        tokenContractAddress,
+        tokenContractArtifact.abi,
+        signer
+      );
+
+      try {
+        const transaction = await TokenContract.approve(
+          DEXContractAddress,
+          ethers.utils.parseEther("1.0")
+        );
+
+        toast.promise(transaction.wait(), {
+          pending: "Approving in progress 🔗",
+          success: "Approved 👌",
+          error: "Transaction rejected 🤯",
+        });
+        await transaction.wait();
+
+        const allowance = parseInt(
+          await TokenContract.allowance(accounts[0], DEXContractAddress),
+          16
+        );
+
+        setApproved(allowance === 0 ? false : true);
+      } catch (err) {
+        console.log(err.message);
+      }
+    }
+  }
+
+  async function change() {
+    if (typeof window.ethereum !== "undefined") {
+      let accounts = await window.ethereum.request({
+        method: "eth_requestAccounts",
+      });
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const signer = provider.getSigner();
+
+      const DEXContract = new ethers.Contract(
+        DEXContractAddress,
+        DEXcontractArtifact.abi,
+        signer
+      );
+
+      console.log(
+        tokenFrom?.symbol,
+        parseInt(ethers.utils.parseEther(valueFrom)?._hex, 16)
+      );
+
+      try {
+        const transaction = await DEXContract.change(
+          tokenFrom?.symbol,
+          parseInt(ethers.utils.parseEther(valueFrom)?._hex, 16)
+        );
+        toast.promise(transaction.wait(), {
+          pending: "Swapping 🔗",
+          success: "Swapping done 👌",
+          error: "Transaction rejected 🤯",
+        });
+        await transaction.wait();
+        fetchTokenFromData(tokenFrom?.symbol);
+        fetchTokenToData(tokenTo?.symbol);
+      } catch (err) {
+        console.log(err);
       }
     }
   }
@@ -144,7 +242,16 @@ export default function SwappingPage() {
   }
 
   function setMax() {
-    setValueFrom(tokenFrom["balance"]);
+    const max = tokenFrom?.balance;
+    setValueFrom(max);
+    const valueTo = (tokenFrom?.price / tokenTo?.price) * max;
+    setValueTo(valueTo.toFixed(8));
+  }
+
+  function handleFromValueChange(event) {
+    setValueFrom(event.target.value);
+    const valueTo = (tokenFrom?.price / tokenTo?.price) * event.target.value;
+    setValueTo(valueTo.toFixed(2));
   }
 
   return (
@@ -152,7 +259,7 @@ export default function SwappingPage() {
       <div className="container">
         <div className="col-12 ">
           <div className="card no-hover staking-card single-staking">
-            <h3 className="m-0">{data.heading}</h3>
+            <h3 className="m-0">Swap Tokens</h3>
 
             <div
               style={{
@@ -167,7 +274,9 @@ export default function SwappingPage() {
                   <div className="input-text">
                     <input
                       type="text"
-                      placeholder={`Swap : ${valueFrom} ${tokenFrom?.symbol}`}
+                      placeholder={`Swap ${tokenFrom?.symbol}`}
+                      onChange={handleFromValueChange}
+                      value={valueFrom ? valueFrom : ""}
                     />
                   </div>
                   <button
@@ -180,17 +289,25 @@ export default function SwappingPage() {
                 <div className="input-area d-flex flex-column flex-md-row">
                   <div className="input-text">
                     <input
+                      disabled="disabled"
                       type="text"
-                      placeholder={`Get : ${valueTo} ${tokenTo?.symbol}`}
+                      placeholder={`Get ${tokenTo?.symbol}`}
+                      value={valueTo ? valueTo : ""}
                     />
                   </div>
                   {approved && (
-                    <button className="btn input-btn mt-2 mt-md-0 ml-md-3">
+                    <button
+                      onClick={change}
+                      className="btn input-btn mt-2 mt-md-0 ml-md-3"
+                    >
                       Swap
                     </button>
                   )}
                   {!approved && (
-                    <button className="btn input-btn mt-2 mt-md-0 ml-md-3">
+                    <button
+                      onClick={approve}
+                      className="btn input-btn mt-2 mt-md-0 ml-md-3"
+                    >
                       Approve
                     </button>
                   )}
@@ -250,13 +367,10 @@ export default function SwappingPage() {
                 </div>
               </div>
             </div>
-            <span>{data.content}</span>
-            <span className="mt-3">
-              <strong>{data.note}</strong>
-            </span>
           </div>
         </div>
       </div>
+      <ToastContainer />
     </section>
   );
 }
