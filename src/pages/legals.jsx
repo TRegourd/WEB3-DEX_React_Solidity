@@ -10,7 +10,7 @@ export default function LegalPage() {
   return (
     <div className="main">
       <Header />
-      <Breadcrumb title="Blog Single" subpage="Community" page="Blog Single" />
+      <Breadcrumb title="Credits & Mentions" subpage="" page="Credits" />
       <BlogSingle />
       <Footer />
       <ModalMenu />
