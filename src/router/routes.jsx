@@ -30,7 +30,7 @@ function Router() {
                 />
               );
             })}
-          <Route path="/help" element={<HelpPage />} />
+          {/* <Route path="/help" element={<HelpPage />} /> */}
           <Route path="/legals" element={<LegalPage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>

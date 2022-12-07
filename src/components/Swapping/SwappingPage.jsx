@@ -13,7 +13,7 @@ export default function SwappingPage() {
   const [valueTo, setValueTo] = useState(0);
 
   const DEXcontractArtifact = artifacts["DEX"];
-  const DEXContractAddress = "0x43f3aCa29f53CAdf8f12023417A3FbEAD6ec07D3";
+  const DEXContractAddress = "0x033Cd45B18808B08E98463F66889C4b1bF75B358";
 
   useEffect(() => {
     fetchTokenFromData("rCATS");
@@ -64,10 +64,7 @@ export default function SwappingPage() {
         setApproved(allowance === 0 ? false : true);
         setTokenFrom({
           symbol: symbol,
-          balance: (
-            parseInt(userBalance._hex, 16) /
-            ethers.utils.parseUnits("1", "ether")
-          ).toFixed(8),
+          balance: parseInt(userBalance._hex, 16),
           price: parseInt(tokenPrice?._hex, 16),
         });
       } catch (err) {
@@ -110,6 +107,8 @@ export default function SwappingPage() {
           provider
         );
 
+        console.log(oracleContractAddress);
+
         try {
           const allowance = parseInt(
             await TokenContract.allowance(accounts[0], DEXContractAddress),
@@ -122,10 +121,7 @@ export default function SwappingPage() {
           setApproved(allowance === 0 ? false : true);
           setTokenTo({
             symbol: symbol,
-            balance: (
-              parseInt(userBalance._hex, 16) /
-              ethers.utils.parseUnits("1", "ether")
-            ).toFixed(8),
+            balance: parseInt(userBalance._hex, 16),
             price: parseInt(tokenPrice?._hex, 16),
           });
         } catch (err) {
@@ -138,10 +134,7 @@ export default function SwappingPage() {
 
           setTokenTo({
             symbol: symbol,
-            balance: (
-              parseInt(userBalance._hex, 16) /
-              ethers.utils.parseUnits("1", "ether")
-            ).toFixed(8),
+            balance: parseInt(userBalance._hex, 16),
             price: parseInt(ethers.utils.parseUnits("1", "ether")._hex, 16),
           });
         } catch (err) {
@@ -209,15 +202,10 @@ export default function SwappingPage() {
         signer
       );
 
-      console.log(
-        tokenFrom?.symbol,
-        parseInt(ethers.utils.parseEther(valueFrom)?._hex, 16)
-      );
-
       try {
         const transaction = await DEXContract.change(
           tokenFrom?.symbol,
-          parseInt(ethers.utils.parseEther(valueFrom)?._hex, 16)
+          ethers.utils.parseUnits(String(valueFrom), "wei")
         );
         toast.promise(transaction.wait(), {
           pending: "Swapping 🔗",
@@ -245,14 +233,17 @@ export default function SwappingPage() {
     const max = tokenFrom?.balance;
     setValueFrom(max);
     const valueTo = (tokenFrom?.price / tokenTo?.price) * max;
-    setValueTo(valueTo.toFixed(8));
+    setValueTo(valueTo);
   }
 
   function handleFromValueChange(event) {
+    console.log(event.target.value);
     setValueFrom(event.target.value);
-    const valueTo = (tokenFrom?.price / tokenTo?.price) * event.target.value;
-    setValueTo(valueTo.toFixed(2));
+    const valueTo = tokenFrom?.price * event.target.value;
+    setValueTo(valueTo);
   }
+
+  console.log({ valueFrom }, { valueTo }, { tokenFrom }, { tokenTo });
 
   return (
     <section className="staking-area" style={{ alignItems: "center" }}>
@@ -276,7 +267,11 @@ export default function SwappingPage() {
                       type="text"
                       placeholder={`Swap ${tokenFrom?.symbol}`}
                       onChange={handleFromValueChange}
-                      value={valueFrom ? valueFrom : ""}
+                      value={
+                        valueFrom
+                          ? valueFrom / ethers.utils.parseUnits("1", "ether")
+                          : ""
+                      }
                     />
                   </div>
                   <button
@@ -292,7 +287,11 @@ export default function SwappingPage() {
                       disabled="disabled"
                       type="text"
                       placeholder={`Get ${tokenTo?.symbol}`}
-                      value={valueTo ? valueTo : ""}
+                      value={
+                        valueTo
+                          ? valueTo / ethers.utils.parseUnits("1", "ether")
+                          : ""
+                      }
                     />
                   </div>
                   {approved && (
@@ -337,7 +336,8 @@ export default function SwappingPage() {
                     </select>
                   </h4>
                   <p>
-                    {tokenFrom?.balance} {tokenFrom?.symbol}
+                    {tokenFrom?.balance / ethers.utils.parseUnits("1", "ether")}{" "}
+                    {tokenFrom?.symbol}
                   </p>
                 </div>
                 <button className="btn icons icon-arrow-down text-effect"></button>
@@ -362,7 +362,8 @@ export default function SwappingPage() {
                     </select>
                   </h4>
                   <p>
-                    {tokenTo?.balance} {tokenTo?.symbol}
+                    {tokenTo?.balance / ethers.utils.parseUnits("1", "ether")}{" "}
+                    {tokenTo?.symbol}
                   </p>
                 </div>
               </div>

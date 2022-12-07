@@ -20,26 +20,6 @@ const data = {
   widgetData: [
     {
       id: 1,
-      text: "Features",
-      link: "/blog",
-    },
-    {
-      id: 2,
-      text: "Roadmap",
-      link: "/blog",
-    },
-    {
-      id: 3,
-      text: "How It Works",
-      link: "#about",
-    },
-    {
-      id: 4,
-      text: "Blog",
-      link: "/blog",
-    },
-    {
-      id: 5,
       text: "Terms & Credits",
       link: "/legals",
     },

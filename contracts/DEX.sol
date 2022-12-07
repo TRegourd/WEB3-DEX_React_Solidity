@@ -86,23 +86,26 @@ contract DEX is Ownable, ReentrancyGuard {
         require(transferToDex && transferToUser && approveDex);
     }
 
-    function change(string memory _from, uint256 _amount) public nonReentrant {
+    function change(
+        string memory _from,
+        uint256 _amountFrom,
+        uint256 _amountTo
+    ) public nonReentrant {
         address from = tokens[_from];
 
         require(from != address(0x0), "Invalid token");
-        require(address(this).balance >= _amount, "Insuficient Dex Liquidity");
         require(
-            IERC20(from).balanceOf(msg.sender) >= _amount,
+            address(this).balance >= _amountTo,
+            "Insuficient Dex Liquidity"
+        );
+        require(
+            IERC20(from).balanceOf(msg.sender) >= _amountFrom,
             "Insuficient Swaper Balance"
         );
 
-        uint256 fromPrice = oracles[_from].getPrice();
+        ERC20Burnable(from).burnFrom(msg.sender, _amountFrom);
 
-        uint256 changeAmount = (fromPrice) * _amount;
-
-        ERC20Burnable(from).burnFrom(msg.sender, _amount);
-
-        bool transferToUser = payable(msg.sender).send(changeAmount);
+        bool transferToUser = payable(msg.sender).send(_amountTo);
 
         require(transferToUser);
     }
